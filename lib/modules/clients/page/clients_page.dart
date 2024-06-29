@@ -21,6 +21,8 @@ class ClientsPage extends ConsumerStatefulWidget {
 class _ClientsPageState extends ConsumerState<ClientsPage> {
   bool loading = false;
 
+  final TextEditingController nameController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +47,13 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
   @override
   Widget build(BuildContext context) {
     final list = ref.watch(clientsProvider.select((value) => value.clients));
+    final listTmp = list.where((element) {
+      return nameController.text.isEmpty
+          ? true
+          : element.name!
+              .toLowerCase()
+              .contains(nameController.text.toLowerCase());
+    }).toList();
     return SsScaffold(
       title: 'Clientes',
       actions: [
@@ -67,8 +76,12 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
                   child: Column(
                     children: [
-                      const SsTextInput(
+                      SsTextInput(
+                        controller: nameController,
                         hintText: 'Buscar Cliente',
+                        onChanged: (p0) {
+                          setState(() {});
+                        },
                       ),
                       SizedBox(height: 1.h),
                       Expanded(
@@ -77,11 +90,11 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
                             return Padding(
                               padding: EdgeInsets.symmetric(vertical: 4.h),
                               child: ClientsCard(
-                                client: list[index],
+                                client: listTmp[index],
                               ),
                             );
                           },
-                          itemCount: list.length,
+                          itemCount: listTmp.length,
                         ),
                       ),
                     ],

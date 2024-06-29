@@ -1,13 +1,13 @@
-import 'package:coyote/models/client_model.dart';
+import 'package:coyote/models/loan_model.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ClientDatabase {
-  static final ClientDatabase instance = ClientDatabase._init();
+class LoanDatabase {
+  static final LoanDatabase instance = LoanDatabase._init();
   static Database? _database;
 
-  ClientDatabase._init();
+  LoanDatabase._init();
 
-  final String table = 'clients';
+  final String table = 'loans';
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -25,9 +25,10 @@ class ClientDatabase {
     await db.execute('''
     CREATE TABLE $table (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      address TEXT NOT NULL,
-      phone_number TEXT NOT NULL
+      position INTEGER,
+      user_id TEXT NOT NULL,
+      amount REAL NOT NULL,
+      quotas INTEGER NOT NULL
     )
   ''');
   }
@@ -37,33 +38,22 @@ class ClientDatabase {
     db.close();
   }
 
-  Future<int> insert(ClientModel client) async {
+  Future<int> insert(LoanModel client) async {
     final db = await instance.database;
     return await db.insert(table, client.toMap());
   }
 
-  Future<List<ClientModel>> getAllClients() async {
+  Future<List<LoanModel>> getAllLoans() async {
     final db = await instance.database;
     final List<Map<String, dynamic>> maps = await db.query(table);
     return List.generate(maps.length, (i) {
-      return ClientModel(
+      return LoanModel(
         id: maps[i]['id'],
-        name: maps[i]['name'],
-        address: maps[i]['address'],
-        phoneNumber: maps[i]['phone_number'],
+        position: maps[i]['position'],
+        userId: maps[i]['user_id'],
+        amount: maps[i]['amount'],
+        quotas: maps[i]['quotas'],
       );
     });
-  }
-
-  Future<ClientModel> getClient(int id) async {
-    final db = await instance.database;
-    final List<Map<String, dynamic>> maps =
-        await db.query(table, where: 'id = ?', whereArgs: [id]);
-    return ClientModel(
-      id: maps[0]['id'],
-      name: maps[0]['name'],
-      address: maps[0]['address'],
-      phoneNumber: maps[0]['phone_number'],
-    );
   }
 }

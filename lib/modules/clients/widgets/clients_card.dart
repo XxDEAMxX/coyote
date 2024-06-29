@@ -28,21 +28,21 @@ class ClientsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            client.name,
+            client.name ?? '-',
             style: TextStyle(
               fontSize: 20.sp,
               color: Colors.white,
             ),
           ),
           Text(
-            '1515165',
+            '${client.id ?? '-'}',
             style: TextStyle(
               fontSize: 12.sp,
               color: Colors.green,
             ),
           ),
           Text(
-            client.address,
+            client.address ?? '-',
             style: TextStyle(
               fontSize: 12.sp,
               color: Colors.green,
@@ -57,7 +57,7 @@ class ClientsCard extends StatelessWidget {
               ),
             ),
             child: Text(
-              client.phoneNumber,
+              client.phoneNumber ?? '-',
               style: TextStyle(
                 fontSize: 14.sp,
                 color: Colors.white,

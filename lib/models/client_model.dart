@@ -1,12 +1,14 @@
 class ClientModel {
-  final String name;
-  final String address;
-  final String phoneNumber;
+  final int? id;
+  final String? name;
+  final String? address;
+  final String? phoneNumber;
 
   ClientModel({
-    required this.name,
-    required this.address,
-    required this.phoneNumber,
+    this.id,
+    this.name,
+    this.address,
+    this.phoneNumber,
   });
 
   Map<String, dynamic> toMap() {

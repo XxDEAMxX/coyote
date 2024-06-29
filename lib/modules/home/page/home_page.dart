@@ -1,17 +1,48 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coyote/modules/home/widget/card_debt.dart';
+import 'package:coyote/modules/new_loan/loan_provider.dart';
 import 'package:coyote/routes/app_router.dart';
 import 'package:coyote/routes/app_router.gr.dart';
 import 'package:coyote/widgets/ss_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 @RoutePage()
-class HomePage extends StatelessWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await getClients();
+    });
+  }
+
+  Future<void> getClients() async {
+    try {
+      loading = true;
+      setState(() {});
+      await ref.read(loanProvider.notifier).getAllLoans();
+    } catch (e) {
+      print(e);
+    } finally {
+      loading = false;
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final list = ref.watch(loanProvider.select((state) => state.loans));
     return SsScaffold(
       actions: <Widget>[
         IconButton(
@@ -86,14 +117,16 @@ class HomePage extends StatelessWidget {
       ],
       title: 'Home',
       backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return CardDebt(
-            rout: index,
-          );
-        },
-        itemCount: 10,
-      ),
+      body: loading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                return CardDebt(
+                  loan: list[index],
+                );
+              },
+              itemCount: list.length,
+            ),
     );
   }
 }
