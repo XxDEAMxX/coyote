@@ -3,6 +3,7 @@ import 'package:coyote/models/client_model.dart';
 import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/routes/app_router.dart';
 import 'package:coyote/routes/app_router.gr.dart';
+import 'package:coyote/widgets/ss_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,8 +34,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
     try {
       loading = true;
       setState(() {});
-      client = await ClientDatabase.instance
-          .getClient(int.parse(widget.loan.userId!));
+      client = await ClientDatabase.instance.getClient(widget.loan.clientId!);
     } catch (e) {
       print(e);
     } finally {
@@ -53,19 +53,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
       },
       child: Padding(
         padding: EdgeInsets.all(8.sp),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(8.r),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.all(16),
+        child: SsCard(
           child: loading
               ? const CircularProgressIndicator()
               : Row(
@@ -73,51 +61,43 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                     Center(
                       child: Text(
                         '${widget.loan.position}',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 30,
+                          fontSize: 30.sp,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    const SizedBox(width: 30),
+                    SizedBox(width: 30.w),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           client?.name ?? '-',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
+                          style: TextStyle(
+                            fontSize: 24.sp,
                           ),
                         ),
                         Text(
                           client?.address ?? '-',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                          child: Text(
-                            client?.phoneNumber ?? '-',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
+                        Text(
+                          client?.phoneNumber ?? '-',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'Lunes a Sabado',
                           style: TextStyle(
-                            color: Colors.greenAccent,
-                            fontSize: 12,
+                            color: Colors.red,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],

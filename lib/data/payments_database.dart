@@ -1,4 +1,5 @@
 import 'package:coyote/models/payment_model.dart';
+import 'package:coyote/type/date_time_extension.dart';
 import 'package:sqflite/sqflite.dart';
 
 class PaymentsDatabase {
@@ -119,6 +120,28 @@ class PaymentsDatabase {
             : null,
       );
     });
+  }
+
+  Future<List<PaymentModel>> getPaymentsByDate(String date) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(table);
+    final list = List.generate(maps.length, (i) {
+      return PaymentModel(
+        id: maps[i]['id'],
+        amountPaid: maps[i]['amount_paid'],
+        amountToBePaid: maps[i]['amount_to_be_paid'],
+        datePayment:
+            DateTime.fromMillisecondsSinceEpoch(maps[i]['date_payment']),
+        loanId: maps[i]['loan_id'],
+        quotaNumber: maps[i]['quota_number'],
+        updatedAt: maps[i]['updated_at'] != null
+            ? DateTime.fromMillisecondsSinceEpoch(maps[i]['updated_at'])
+            : null,
+      );
+    });
+    return list.where((element) {
+      return DateTimeExtension().toHumanize(element.updatedAt).contains(date);
+    }).toList();
   }
 
   Future<int> update(PaymentModel client, int id) async {

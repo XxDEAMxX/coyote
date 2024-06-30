@@ -117,7 +117,6 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
       ],
       title: 'Home',
-      backgroundColor: Colors.white,
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : ListView.builder(

@@ -36,8 +36,9 @@ class SsTextInput extends StatelessWidget {
     return TextField(
       onChanged: onChanged,
       style: TextStyle(
-        fontSize: 14.sp,
+        fontSize: 15.sp,
         color: enable ? textColor : Colors.grey,
+        fontWeight: FontWeight.w500,
       ),
       controller: controller,
       buildCounter: (context,

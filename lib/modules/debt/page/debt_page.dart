@@ -44,8 +44,9 @@ class _DebtPageState extends ConsumerState<DebtPage> {
       print(e);
     } finally {
       loading = false;
+      if (mounted){
       setState(() {});
-    }
+    }}
   }
 
   @override

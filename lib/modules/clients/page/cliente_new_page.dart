@@ -29,7 +29,6 @@ class _ClientNewPageState extends ConsumerState<ClientNewPage> {
   Widget build(BuildContext context) {
     const color = Colors.black;
     return SsScaffold(
-      backgroundColor: Colors.black,
       title: 'Nuevo Cliente',
       body: Container(
         color: color,

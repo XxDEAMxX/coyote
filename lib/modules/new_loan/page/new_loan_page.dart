@@ -47,10 +47,10 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
 
   @override
   Widget build(BuildContext context) {
-    const color = Colors.white;
+    const color = Colors.black;
     return SsScaffold(
       body: Container(
-        color: Colors.black,
+        color: Colors.white,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           child: SingleChildScrollView(
@@ -66,7 +66,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                 ),
                 SsTextInput(
                   controller: positionController,
-                  textColor: Colors.white,
+                  textColor: color,
                   hintText: 'ej. 1',
                   onChanged: (value) {
                     setState(() {});
@@ -76,18 +76,6 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                   ],
                   keyboardType: TextInputType.number,
                 ),
-                // SizedBox(height: 20.h),
-                // Text(
-                //   'Identificación Cliente*',
-                //   style: TextStyle(
-                //     fontSize: 20.sp,
-                //     color: color,
-                //   ),
-                // ),
-                // const SsTextInput(
-                //   textColor: Colors.white,
-                //   hintText: 'ej. 1234567890',
-                // ),
                 SizedBox(height: 20.h),
                 Text(
                   'Nombre Cliente*',
@@ -99,7 +87,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                 SsTextInput(
                   enable: widget.client == null,
                   controller: nameController,
-                  textColor: Colors.white,
+                  textColor: color,
                   hintText: 'ej. Juan Perez',
                   onChanged: (value) {
                     setState(() {});
@@ -116,7 +104,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                 SsTextInput(
                   enable: widget.client == null,
                   controller: addressController,
-                  textColor: Colors.white,
+                  textColor: color,
                   hintText: 'ej. Calle 123, colonia 1, CP 12345, CDMX',
                   onChanged: (value) {
                     setState(() {});
@@ -133,7 +121,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                 SsTextInput(
                   enable: widget.client == null,
                   controller: phoneController,
-                  textColor: Colors.white,
+                  textColor: color,
                   hintText: 'ej. 3222222222',
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
@@ -144,18 +132,6 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                     setState(() {});
                   },
                 ),
-                // SizedBox(height: 20.h),
-                // Text(
-                //   'Tipo Venta*',
-                //   style: TextStyle(
-                //     fontSize: 20.sp,
-                //     color: color,
-                //   ),
-                // ),
-                // const SsTextInput(
-                //   textColor: Colors.white,
-                //   hintText: 'ej. Prestamo',
-                // ),
                 SizedBox(height: 20.h),
                 Text(
                   'Valor Venta*',
@@ -166,7 +142,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                 ),
                 SsTextInput(
                   controller: amountController,
-                  textColor: Colors.white,
+                  textColor: color,
                   hintText: 'ej. 500',
                   onChanged: (value) {
                     setState(() {});
@@ -176,7 +152,6 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                   ],
                   keyboardType: TextInputType.number,
                 ),
-
                 SizedBox(height: 20.h),
                 Text(
                   'Número Cuotas*',
@@ -187,7 +162,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                 ),
                 SsTextInput(
                   controller: quotasController,
-                  textColor: Colors.white,
+                  textColor: color,
                   hintText: 'ej. 30',
                   onChanged: (value) {
                     setState(() {});
@@ -267,20 +242,20 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
     setState(() {});
 
     try {
-      int? userId;
+      int? clientId;
       if (widget.client == null) {
         final ClientModel clientModel = ClientModel(
           name: name,
           address: address,
           phoneNumber: phone,
         );
-        userId = await ClientDatabase.instance.insert(clientModel);
+        clientId = await ClientDatabase.instance.insert(clientModel);
       }
       final amountTotal = amount + (amount * 0.2);
       final LoanModel loanModel = LoanModel(
         amount: amountTotal * 1000,
         position: position,
-        userId: widget.client != null ? '${widget.client!.id!}' : '$userId',
+        clientId: widget.client != null ? widget.client!.id! : clientId,
         quotas: quotas,
         createAt: DateTime.now(),
       );

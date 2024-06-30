@@ -1,12 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/payments_database.dart';
 import 'package:coyote/models/payment_model.dart';
+import 'package:coyote/modules/sales/widget/sales_data_dialog.dart';
 import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_app_bar.dart';
+import 'package:coyote/widgets/ss_card.dart';
+import 'package:coyote/widgets/ss_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 
 @RoutePage()
 class SalesPage extends StatefulWidget {
@@ -19,6 +21,7 @@ class SalesPage extends StatefulWidget {
 class _SalesPageState extends State<SalesPage> {
   List<PaymentModel> payments = [];
 
+  @override
   initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -56,7 +59,40 @@ class _SalesPageState extends State<SalesPage> {
               itemBuilder: (context, index) {
                 String date = paymentSumsByDate.keys.elementAt(index);
                 double totalPaid = paymentSumsByDate[date]!;
-                return SsCard(date: date, totalPaid: totalPaid);
+                return InkWell(
+                  onTap: () {
+                    SsDialog.show(
+                        context: context,
+                        content: SalesDataDialog(
+                          date: date,
+                        ));
+                  },
+                  child: SsCard(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              date,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              'Total:  ${DoubleExtension().toMoneySim(totalPaid)}',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
             );
           }
@@ -67,11 +103,11 @@ class _SalesPageState extends State<SalesPage> {
 
   Future<Map<String, double>> _getPaymentSumsByDate() async {
     Map<String, double> paymentSumsByDate = {};
-    DateFormat formatter = DateFormat('yyyy-MM-dd');
 
     for (var payment in payments) {
       if (payment.updatedAt != null) {
-        String formattedDate = formatter.format(payment.updatedAt!);
+        String formattedDate =
+            DateTimeExtension().toHumanize(payment.updatedAt!);
         if (paymentSumsByDate.containsKey(formattedDate)) {
           paymentSumsByDate[formattedDate] =
               paymentSumsByDate[formattedDate]! + payment.amountPaid!;
@@ -81,62 +117,5 @@ class _SalesPageState extends State<SalesPage> {
       }
     }
     return paymentSumsByDate;
-  }
-}
-
-class SsCard extends StatelessWidget {
-  const SsCard({
-    super.key,
-    required this.date,
-    required this.totalPaid,
-  });
-
-  final String date;
-  final double totalPaid;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      margin: const EdgeInsets.symmetric(
-        vertical: 8,
-        horizontal: 16,
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                date,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                'Total:  ${DoubleExtension().toMoney(totalPaid)}',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }

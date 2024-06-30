@@ -88,11 +88,10 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
             width: double.infinity,
             text: 'Pagar',
             onTap: () async {
-              double amount = double.parse(_amountController.text) * 1000;
-              double missing = amount;
-              final DateTime now = DateTime.now();
-
               try {
+                double amount = double.parse(_amountController.text) * 1000;
+                double missing = amount;
+                final DateTime now = DateTime.now();
                 if (amount > balance!) {
                   await PaymentsDatabase.instance.update(
                     widget.payment.copyWith(

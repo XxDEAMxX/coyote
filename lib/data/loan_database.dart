@@ -26,7 +26,7 @@ class LoanDatabase {
     CREATE TABLE $table (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       position INTEGER,
-      user_id TEXT NOT NULL,
+      client_id INTEGER NOT NULL,
       amount REAL NOT NULL,
       quotas INTEGER NOT NULL,
       create_at INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -51,7 +51,7 @@ class LoanDatabase {
       return LoanModel(
         id: maps[i]['id'],
         position: maps[i]['position'],
-        userId: maps[i]['user_id'],
+        clientId: maps[i]['client_id'],
         amount: maps[i]['amount'],
         quotas: maps[i]['quotas'],
         createAt: DateTime.fromMillisecondsSinceEpoch(maps[i]['create_at']),
@@ -69,7 +69,7 @@ class LoanDatabase {
     return LoanModel(
       id: maps[0]['id'],
       position: maps[0]['position'],
-      userId: maps[0]['user_id'],
+      clientId: maps[0]['client_id'],
       amount: maps[0]['amount'],
       quotas: maps[0]['quotas'],
       createAt: DateTime.fromMillisecondsSinceEpoch(maps[0]['create_at']),

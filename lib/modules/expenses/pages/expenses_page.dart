@@ -14,7 +14,6 @@ class ExpensesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SsScaffold(
         title: 'Registrar Gasto',
-        backgroundColor: Colors.black,
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           child: Column(

@@ -21,7 +21,7 @@ class CardPayments extends StatelessWidget {
     final int mora = DateTime.now().difference(payment.datePayment!).inDays;
     return InkWell(
       onTap: () {
-        if (true /* balance > 0 && toPay */) {
+        if (balance > 0 && toPay) {
           SsDialog.show(
             context: context,
             content: PaymentDialog(
@@ -143,7 +143,7 @@ class CardPayments extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    DoubleExtension().toMoney(payment.amountToBePaid),
+                    DoubleExtension().toMoneySim(payment.amountToBePaid),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -156,7 +156,7 @@ class CardPayments extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      DoubleExtension().toMoney(balance),
+                      DoubleExtension().toMoneySim(balance),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
