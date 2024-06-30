@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/client_database.dart';
 import 'package:coyote/data/loan_database.dart';
+import 'package:coyote/data/payments_database.dart';
 import 'package:coyote/models/client_model.dart';
 import 'package:coyote/models/loan_model.dart';
+import 'package:coyote/models/payment_model.dart';
 import 'package:coyote/modules/new_loan/loan_provider.dart';
 import 'package:coyote/routes/app_router.dart';
 import 'package:coyote/widgets/ss_app_bar.dart';
@@ -16,7 +18,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 @RoutePage()
 class NewLoanPage extends ConsumerStatefulWidget {
-  const NewLoanPage({super.key});
+  final ClientModel? client;
+
+  const NewLoanPage({super.key, this.client});
 
   @override
   ConsumerState<NewLoanPage> createState() => _NewLoanPageState();
@@ -32,144 +36,178 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
   final TextEditingController quotasController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.client != null) {
+      nameController.text = widget.client?.name ?? '-';
+      addressController.text = widget.client?.address ?? '-';
+      phoneController.text = widget.client?.phoneNumber ?? '-';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     const color = Colors.white;
     return SsScaffold(
-      backgroundColor: Colors.black,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Posición*',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: color,
+      body: Container(
+        color: Colors.black,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Posición*',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: color,
+                  ),
                 ),
-              ),
-              SsTextInput(
-                controller: positionController,
-                textColor: Colors.white,
-                hintText: 'ej. 1',
-              ),
-              // SizedBox(height: 20.h),
-              // Text(
-              //   'Identificación Cliente*',
-              //   style: TextStyle(
-              //     fontSize: 20.sp,
-              //     color: color,
-              //   ),
-              // ),
-              // const SsTextInput(
-              //   textColor: Colors.white,
-              //   hintText: 'ej. 1234567890',
-              // ),
-              SizedBox(height: 20.h),
-              Text(
-                'Nombre Cliente*',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: color,
+                SsTextInput(
+                  controller: positionController,
+                  textColor: Colors.white,
+                  hintText: 'ej. 1',
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                 ),
-              ),
-              SsTextInput(
-                controller: nameController,
-                textColor: Colors.white,
-                hintText: 'ej. Juan Perez',
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                'Dirección*',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: color,
+                // SizedBox(height: 20.h),
+                // Text(
+                //   'Identificación Cliente*',
+                //   style: TextStyle(
+                //     fontSize: 20.sp,
+                //     color: color,
+                //   ),
+                // ),
+                // const SsTextInput(
+                //   textColor: Colors.white,
+                //   hintText: 'ej. 1234567890',
+                // ),
+                SizedBox(height: 20.h),
+                Text(
+                  'Nombre Cliente*',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: color,
+                  ),
                 ),
-              ),
-              SsTextInput(
-                controller: addressController,
-                textColor: Colors.white,
-                hintText: 'ej. Calle 123, colonia 1, CP 12345, CDMX',
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                'Telefono*',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: color,
+                SsTextInput(
+                  enable: widget.client == null,
+                  controller: nameController,
+                  textColor: Colors.white,
+                  hintText: 'ej. Juan Perez',
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                 ),
-              ),
-              SsTextInput(
-                controller: phoneController,
-                textColor: Colors.white,
-                hintText: 'ej. 3222222222',
-                keyboardType: TextInputType.number,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                  LengthLimitingTextInputFormatter(10),
-                ],
-              ),
-              // SizedBox(height: 20.h),
-              // Text(
-              //   'Tipo Venta*',
-              //   style: TextStyle(
-              //     fontSize: 20.sp,
-              //     color: color,
-              //   ),
-              // ),
-              // const SsTextInput(
-              //   textColor: Colors.white,
-              //   hintText: 'ej. Prestamo',
-              // ),
-              SizedBox(height: 20.h),
-              Text(
-                'Valor Venta*',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: color,
+                SizedBox(height: 20.h),
+                Text(
+                  'Dirección*',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: color,
+                  ),
                 ),
-              ),
-              SsTextInput(
-                controller: amountController,
-                textColor: Colors.white,
-                hintText: 'ej. 500.000',
-              ),
-              SizedBox(height: 20.h),
-              Text(
-                'Número Cuotas*',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  color: color,
+                SsTextInput(
+                  enable: widget.client == null,
+                  controller: addressController,
+                  textColor: Colors.white,
+                  hintText: 'ej. Calle 123, colonia 1, CP 12345, CDMX',
+                  onChanged: (value) {
+                    setState(() {});
+                  },
                 ),
-              ),
-              SsTextInput(
-                controller: quotasController,
-                textColor: Colors.white,
-                hintText: 'ej. 30',
-              ),
-              SizedBox(height: 20.h),
-              SsButton(
-                enable: _enable(),
-                loading: loading,
-                backgroundColor: Colors.green,
-                textColor: Colors.black,
-                width: double.infinity,
-                text: 'Crear',
-                onTap: () async {
-                  await addLoan(
-                    address: addressController.text,
-                    amount: double.parse(amountController.text),
-                    name: nameController.text,
-                    phone: phoneController.text,
-                    position: int.parse(positionController.text),
-                    quotas: int.parse(quotasController.text),
-                    ref: ref,
-                  );
-                },
-              ),
-              SizedBox(height: 20.h),
-            ],
+                SizedBox(height: 20.h),
+                Text(
+                  'Telefono*',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: color,
+                  ),
+                ),
+                SsTextInput(
+                  enable: widget.client == null,
+                  controller: phoneController,
+                  textColor: Colors.white,
+                  hintText: 'ej. 3222222222',
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+                // SizedBox(height: 20.h),
+                // Text(
+                //   'Tipo Venta*',
+                //   style: TextStyle(
+                //     fontSize: 20.sp,
+                //     color: color,
+                //   ),
+                // ),
+                // const SsTextInput(
+                //   textColor: Colors.white,
+                //   hintText: 'ej. Prestamo',
+                // ),
+                SizedBox(height: 20.h),
+                Text(
+                  'Valor Venta*',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: color,
+                  ),
+                ),
+                SsTextInput(
+                  controller: amountController,
+                  textColor: Colors.white,
+                  hintText: 'ej. 500.000',
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+
+                SizedBox(height: 20.h),
+                Text(
+                  'Número Cuotas*',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: color,
+                  ),
+                ),
+                SsTextInput(
+                  controller: quotasController,
+                  textColor: Colors.white,
+                  hintText: 'ej. 30',
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(height: 20.h),
+                SsButton(
+                  enable: _enable(),
+                  loading: loading,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.black,
+                  width: double.infinity,
+                  text: 'Crear',
+                  onTap: () async {
+                    await addLoan(
+                      address: addressController.text,
+                      amount: double.parse(amountController.text),
+                      name: nameController.text,
+                      phone: phoneController.text,
+                      position: int.parse(positionController.text),
+                      quotas: int.parse(quotasController.text),
+                      ref: ref,
+                    );
+                  },
+                ),
+                SizedBox(height: 20.h),
+              ],
+            ),
           ),
         ),
       ),
@@ -193,6 +231,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
       await ref.read(loanProvider.notifier).getAllLoans();
     } catch (e) {
       print(e);
+      SsNotification.error('Error al obtener los clientes');
     } finally {
       loading = false;
       setState(() {});
@@ -214,25 +253,40 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
     }
     loading = true;
     setState(() {});
-    final ClientModel clientModel = ClientModel(
-      name: name,
-      address: address,
-      phoneNumber: phone,
-    );
 
     try {
-      final userId = await ClientDatabase.instance.insert(clientModel);
+      int? userId;
+      if (widget.client == null) {
+        final ClientModel clientModel = ClientModel(
+          name: name,
+          address: address,
+          phoneNumber: phone,
+        );
+        userId = await ClientDatabase.instance.insert(clientModel);
+      }
+      final amountTotal = amount + (amount * 0.2);
       final LoanModel loanModel = LoanModel(
-        amount: amount,
+        amount: amountTotal * 1000,
         position: position,
-        userId: '$userId',
+        userId: widget.client != null ? '${widget.client!.id!}' : '$userId',
         quotas: quotas,
+        createAt: DateTime.now(),
       );
-      await LoanDatabase.instance.insert(loanModel);
+      final loanId = await LoanDatabase.instance.insert(loanModel);
+      final PaymentModel paymentModel = PaymentModel(
+        loanId: loanId,
+        amountPaid: 0.0,
+        amountToBePaid: amountTotal / quotas * 1000,
+        datePayment: DateTime.now(),
+        quotaNumber: 1,
+        updatedAt: null,
+      );
+      await PaymentsDatabase.instance.insertAll(paymentModel, quotas);
       await ref.read(loanProvider.notifier).getAllLoans();
       appRouter.maybePop();
     } catch (e) {
-      print('Error create loan: $e');
+      print(e);
+      SsNotification.error('Error al crear el prestamo');
     } finally {
       loading = false;
       setState(() {});

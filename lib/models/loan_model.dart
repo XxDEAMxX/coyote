@@ -4,6 +4,7 @@ class LoanModel {
   final String? userId;
   final double? amount;
   final int? quotas;
+  final DateTime? createAt;
 
   LoanModel({
     this.id,
@@ -11,6 +12,7 @@ class LoanModel {
     this.userId,
     this.amount,
     this.quotas,
+    this.createAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +21,7 @@ class LoanModel {
       'user_id': userId,
       'amount': amount,
       'quotas': quotas,
+      'create_at': createAt?.millisecondsSinceEpoch,
     };
   }
 }

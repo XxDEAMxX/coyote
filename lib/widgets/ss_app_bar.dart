@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SsScaffold extends StatelessWidget {
   final Widget body;
   final Color? backgroundColor;
+  final Color? backgroundColorAppBar;
   final String title;
   final List<Widget>? actions;
   final Color textColor;
@@ -12,6 +13,7 @@ class SsScaffold extends StatelessWidget {
     this.backgroundColor,
     required this.title,
     this.textColor = Colors.black,
+    this.backgroundColorAppBar = Colors.red,
     this.actions,
     super.key,
   });
@@ -19,11 +21,10 @@ class SsScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: textColor,
-        ),
+        backgroundColor: backgroundColorAppBar,
+        forceMaterialTransparency: true,
+        iconTheme: IconThemeData(color: textColor),
         centerTitle: true,
         actions: actions,
         title: Text(

@@ -11,6 +11,7 @@ class SsTextInput extends StatelessWidget {
   final int? maxLines;
   final int? minLines;
   final Function(String)? onChanged;
+  final bool enable;
 
   const SsTextInput({
     super.key,
@@ -22,14 +23,21 @@ class SsTextInput extends StatelessWidget {
     this.maxLines,
     this.minLines,
     this.onChanged,
+    this.enable = true,
   });
   @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.r),
+      borderSide: const BorderSide(
+        color: Colors.grey,
+      ),
+    );
     return TextField(
       onChanged: onChanged,
       style: TextStyle(
         fontSize: 14.sp,
-        color: textColor,
+        color: enable ? textColor : Colors.grey,
       ),
       controller: controller,
       buildCounter: (context,
@@ -42,7 +50,11 @@ class SsTextInput extends StatelessWidget {
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       decoration: InputDecoration(
-        border: const OutlineInputBorder(),
+        filled: !enable,
+        fillColor: Colors.grey.withOpacity(0.2),
+        disabledBorder: border,
+        enabled: enable,
+        border: border,
         hintStyle: TextStyle(fontSize: 14.sp, color: Colors.grey),
         hintText: hintText,
         labelStyle: TextStyle(fontSize: 14.sp, color: Colors.grey),

@@ -28,7 +28,8 @@ class LoanDatabase {
       position INTEGER,
       user_id TEXT NOT NULL,
       amount REAL NOT NULL,
-      quotas INTEGER NOT NULL
+      quotas INTEGER NOT NULL,
+      create_at INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
   ''');
   }
@@ -53,7 +54,25 @@ class LoanDatabase {
         userId: maps[i]['user_id'],
         amount: maps[i]['amount'],
         quotas: maps[i]['quotas'],
+        createAt: DateTime.fromMillisecondsSinceEpoch(maps[i]['create_at']),
       );
     });
+  }
+
+  Future<LoanModel> getLoanById(int id) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      table,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    return LoanModel(
+      id: maps[0]['id'],
+      position: maps[0]['position'],
+      userId: maps[0]['user_id'],
+      amount: maps[0]['amount'],
+      quotas: maps[0]['quotas'],
+      createAt: DateTime.fromMillisecondsSinceEpoch(maps[0]['create_at']),
+    );
   }
 }

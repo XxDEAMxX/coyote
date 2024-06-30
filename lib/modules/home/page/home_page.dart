@@ -51,7 +51,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             size: 30.sp,
           ),
           onPressed: () {
-            appRouter.push(const NewLoanRoute());
+            appRouter.push(NewLoanRoute());
           },
         ),
         PopupMenuButton<String>(

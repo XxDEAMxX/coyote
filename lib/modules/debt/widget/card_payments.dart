@@ -1,22 +1,32 @@
+import 'package:coyote/models/payment_model.dart';
 import 'package:coyote/modules/debt/widget/payment_dialog.dart';
+import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CardPayments extends StatelessWidget {
-  final int rout;
+  final PaymentModel payment;
+  final bool toPay;
   const CardPayments({
-    required this.rout,
+    required this.payment,
+    required this.toPay,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final double balance = payment.amountToBePaid! - payment.amountPaid!;
     return InkWell(
       onTap: () {
-        SsDialog.show(
-          context: context,
-          content: const PaymentDialog(),
-        );
+        if (balance > 0 && toPay) {
+          SsDialog.show(
+            context: context,
+            content: PaymentDialog(
+              payment: payment,
+            ),
+          );
+        }
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -49,7 +59,7 @@ class CardPayments extends StatelessWidget {
                   ),
                   Center(
                     child: Text(
-                      '$rout',
+                      '${payment.quotaNumber}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
@@ -57,6 +67,15 @@ class CardPayments extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                  ),
+                  Text(
+                    '${payment.id}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ],
               ),
@@ -110,9 +129,9 @@ class CardPayments extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  const Text(
-                    '20.00',
-                    style: TextStyle(
+                  Text(
+                    DoubleExtension().toMoney(payment.amountToBePaid),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                     ),
@@ -123,26 +142,34 @@ class CardPayments extends StatelessWidget {
                         bottom: BorderSide(color: Colors.white),
                       ),
                     ),
-                    child: const Text(
-                      '20.00',
-                      style: TextStyle(
+                    child: Text(
+                      DoubleExtension().toMoney(balance),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
                       ),
                     ),
                   ),
-                  const Text(
-                    '2023-10-27',
-                    style: TextStyle(
+                  Text(
+                    DateFormat('dd/MM/yyyy').format(payment.datePayment!),
+                    style: const TextStyle(
                       color: Colors.greenAccent,
                       fontSize: 12,
                     ),
                   ),
                 ],
               ),
-              const Icon(
-                Icons.lock,
-                color: Colors.greenAccent,
+              Icon(
+                toPay
+                    ? Icons.payments_outlined
+                    : balance <= 0
+                        ? Icons.file_download_done
+                        : Icons.lock,
+                color: toPay
+                    ? Colors.blue
+                    : balance <= 0
+                        ? Colors.greenAccent
+                        : Colors.orange,
                 size: 60,
               )
             ],

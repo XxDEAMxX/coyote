@@ -47,7 +47,9 @@ class _CardDebtState extends ConsumerState<CardDebt> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        appRouter.push(const DebtRoute());
+        appRouter.push(DebtRoute(
+          loanId: widget.loan.id!,
+        ));
       },
       child: Padding(
         padding: EdgeInsets.all(8.sp),
