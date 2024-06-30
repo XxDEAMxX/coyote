@@ -1,5 +1,6 @@
 import 'package:coyote/models/payment_model.dart';
 import 'package:coyote/modules/debt/widget/payment_dialog.dart';
+import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_dialog.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,10 @@ class CardPayments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double balance = payment.amountToBePaid! - payment.amountPaid!;
+    final int mora = DateTime.now().difference(payment.datePayment!).inDays;
     return InkWell(
       onTap: () {
-        if (balance > 0 && toPay) {
+        if (true /* balance > 0 && toPay */) {
           SsDialog.show(
             context: context,
             content: PaymentDialog(
@@ -117,14 +119,25 @@ class CardPayments extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
+                  const Text(
+                    'update:',
+                    style: TextStyle(
+                      color: Colors.greenAccent,
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    '0',
-                    style: TextStyle(
+                  Text(
+                    balance <= 0
+                        ? '0'
+                        : mora < 0
+                            ? '0'
+                            : mora.toString(),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                     ),
@@ -157,18 +170,27 @@ class CardPayments extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
+                  Text(
+                    DateTimeExtension().toHumanize(payment.updatedAt),
+                    style: const TextStyle(
+                      color: Colors.greenAccent,
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
               Icon(
-                toPay
-                    ? Icons.payments_outlined
-                    : balance <= 0
-                        ? Icons.file_download_done
+                balance <= 0
+                    ? Icons.file_download_done
+                    : toPay
+                        ? Icons.payments_outlined
                         : Icons.lock,
-                color: toPay
-                    ? Colors.blue
-                    : balance <= 0
-                        ? Colors.greenAccent
+                color: balance <= 0
+                    ? Colors.greenAccent
+                    : toPay
+                        ? mora > 2
+                            ? Colors.red
+                            : Colors.blue
                         : Colors.orange,
                 size: 60,
               )

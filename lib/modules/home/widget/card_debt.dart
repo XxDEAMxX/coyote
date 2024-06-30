@@ -72,7 +72,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                   children: [
                     Center(
                       child: Text(
-                        '${widget.loan.userId}',
+                        '${widget.loan.position}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -123,10 +123,22 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                       ],
                     ),
                     const Spacer(),
-                    const Icon(
-                      Icons.water_drop,
-                      color: Colors.greenAccent,
-                      size: 60,
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.water_drop,
+                          color: Colors.greenAccent,
+                          size: 60.sp,
+                        ),
+                        Text(
+                          'cod: ${widget.loan.id}',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: Colors.greenAccent,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     )
                   ],
                 ),

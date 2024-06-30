@@ -61,6 +61,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 appRouter.push(const ClientsRoute());
                 break;
               case '2':
+                appRouter.push(const SalesRoute());
                 break;
               case '3':
                 break;

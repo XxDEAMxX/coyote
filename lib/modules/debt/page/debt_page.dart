@@ -183,7 +183,7 @@ class _DebtPageState extends ConsumerState<DebtPage> {
                     itemBuilder: (context, index) {
                       return CardPayments(
                         payment: payments[index],
-                        toPay: true /* index == toPay && !paid */,
+                        toPay: index == toPay && !paid,
                       );
                     },
                     itemCount: payments.length,

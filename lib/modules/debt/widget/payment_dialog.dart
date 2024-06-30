@@ -90,13 +90,14 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
             onTap: () async {
               double amount = double.parse(_amountController.text) * 1000;
               double missing = amount;
+              final DateTime now = DateTime.now();
 
               try {
                 if (amount > balance!) {
                   await PaymentsDatabase.instance.update(
                     widget.payment.copyWith(
                       amountPaid: widget.payment.amountToBePaid!,
-                      updatedAt: DateTime.now(),
+                      updatedAt: now,
                     ),
                     widget.payment.id!,
                   );
@@ -112,7 +113,7 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
                         amountPaid: (amount / balance!).ceil() - 1 == i
                             ? missing
                             : widget.payment.amountToBePaid,
-                        updatedAt: DateTime.now(),
+                        updatedAt: now,
                       ),
                       widget.payment.id! + i,
                     );
@@ -121,8 +122,8 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
                 } else {
                   await PaymentsDatabase.instance.update(
                     widget.payment.copyWith(
-                      amountPaid: amount,
-                      updatedAt: DateTime.now(),
+                      amountPaid: amount + widget.payment.amountPaid!,
+                      updatedAt: now,
                     ),
                     widget.payment.id!,
                   );

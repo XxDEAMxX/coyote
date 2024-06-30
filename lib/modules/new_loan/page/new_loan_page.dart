@@ -71,6 +71,10 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                   onChanged: (value) {
                     setState(() {});
                   },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.number,
                 ),
                 // SizedBox(height: 20.h),
                 // Text(
@@ -163,10 +167,14 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                 SsTextInput(
                   controller: amountController,
                   textColor: Colors.white,
-                  hintText: 'ej. 500.000',
+                  hintText: 'ej. 500',
                   onChanged: (value) {
                     setState(() {});
                   },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.number,
                 ),
 
                 SizedBox(height: 20.h),
@@ -184,6 +192,10 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                   onChanged: (value) {
                     setState(() {});
                   },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 20.h),
                 SsButton(

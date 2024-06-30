@@ -27,89 +27,92 @@ class _ClientNewPageState extends ConsumerState<ClientNewPage> {
   final TextEditingController phoneController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    const color = Colors.white;
+    const color = Colors.black;
     return SsScaffold(
       backgroundColor: Colors.black,
       title: 'Nuevo Cliente',
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Nombre*',
-              style: TextStyle(
-                fontSize: 20.sp,
-                color: color,
+      body: Container(
+        color: color,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Nombre*',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            SsTextInput(
-              controller: nameController,
-              textColor: Colors.white,
-              hintText: 'ej. Juan Perez',
-              onChanged: (p0) {
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              'Direccion*',
-              style: TextStyle(
-                fontSize: 20.sp,
-                color: color,
+              SsTextInput(
+                controller: nameController,
+                textColor: Colors.white,
+                hintText: 'ej. Juan Perez',
+                onChanged: (p0) {
+                  setState(() {});
+                },
               ),
-            ),
-            SsTextInput(
-              controller: addressController,
-              textColor: Colors.white,
-              hintText: 'ej. cll 26 #12-56.',
-              onChanged: (p0) {
-                setState(() {});
-              },
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              'Numero de telefono*',
-              style: TextStyle(
-                fontSize: 20.sp,
-                color: color,
+              SizedBox(height: 20.h),
+              Text(
+                'Direccion*',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            SsTextInput(
-              keyboardType: TextInputType.number,
-              controller: phoneController,
-              textColor: Colors.white,
-              hintText: 'ej. 3202222222',
-              onChanged: (p0) {
-                setState(() {});
-              },
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                LengthLimitingTextInputFormatter(10),
-              ],
-            ),
-            SizedBox(height: 20.h),
-            SsButton(
-              enable: loading == false &&
-                  nameController.text.isNotEmpty &&
-                  addressController.text.isNotEmpty &&
-                  phoneController.text.isNotEmpty,
-              loading: loading,
-              backgroundColor: Colors.green,
-              textColor: Colors.black,
-              width: double.infinity,
-              text: 'Crear',
-              onTap: () async {
-                await addClient(
-                  name: nameController.text,
-                  address: addressController.text,
-                  phone: phoneController.text,
-                  ref: ref,
-                );
-              },
-            ),
-            SizedBox(height: 20.h),
-          ],
+              SsTextInput(
+                controller: addressController,
+                textColor: Colors.white,
+                hintText: 'ej. cll 26 #12-56.',
+                onChanged: (p0) {
+                  setState(() {});
+                },
+              ),
+              SizedBox(height: 20.h),
+              Text(
+                'Numero de telefono*',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  color: Colors.white,
+                ),
+              ),
+              SsTextInput(
+                keyboardType: TextInputType.number,
+                controller: phoneController,
+                textColor: Colors.white,
+                hintText: 'ej. 3202222222',
+                onChanged: (p0) {
+                  setState(() {});
+                },
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  LengthLimitingTextInputFormatter(10),
+                ],
+              ),
+              SizedBox(height: 20.h),
+              SsButton(
+                enable: loading == false &&
+                    nameController.text.isNotEmpty &&
+                    addressController.text.isNotEmpty &&
+                    phoneController.text.isNotEmpty,
+                loading: loading,
+                backgroundColor: Colors.green,
+                textColor: Colors.black,
+                width: double.infinity,
+                text: 'Crear',
+                onTap: () async {
+                  await addClient(
+                    name: nameController.text,
+                    address: addressController.text,
+                    phone: phoneController.text,
+                    ref: ref,
+                  );
+                },
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ),
         ),
       ),
     );
