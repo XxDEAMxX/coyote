@@ -1,24 +1,25 @@
 import 'package:coyote/data/client_database.dart';
+import 'package:coyote/data/expenses_database.dart';
 import 'package:coyote/data/loan_database.dart';
-import 'package:coyote/data/payments_database.dart';
-import 'package:coyote/models/payment_model.dart';
+import 'package:coyote/models/expense_model.dart';
+import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_card.dart';
 import 'package:coyote/widgets/ss_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DataPayment {
+class DataSales {
   final String name;
   final double amount;
-  DataPayment({
+  DataSales({
     required this.name,
     required this.amount,
   });
 }
 
-class CashBoxDataDialog extends StatefulWidget {
-  const CashBoxDataDialog({
+class ExpensesDataDialog extends StatefulWidget {
+  const ExpensesDataDialog({
     super.key,
     required this.date,
   });
@@ -26,12 +27,12 @@ class CashBoxDataDialog extends StatefulWidget {
   final String date;
 
   @override
-  State<CashBoxDataDialog> createState() => _CashBoxDataDialogState();
+  State<ExpensesDataDialog> createState() => _ExpensesDataDialogState();
 }
 
-class _CashBoxDataDialogState extends State<CashBoxDataDialog> {
-  List<PaymentModel> payments = [];
-  List<DataPayment> dataPayments = [];
+class _ExpensesDataDialogState extends State<ExpensesDataDialog> {
+  List<ExpenseModel> loans = [];
+  List<DataSales> dataPayments = [];
   bool loading = false;
 
   @override
@@ -48,16 +49,13 @@ class _CashBoxDataDialogState extends State<CashBoxDataDialog> {
       setState(() {});
     }
     try {
-      payments = await PaymentsDatabase.instance.getPaymentsByDate(widget.date);
-      for (var payment in payments) {
-        final loan = await LoanDatabase.instance.getLoanById(payment.loanId!);
-        final client = await ClientDatabase.instance.getClient(loan.clientId!);
-        dataPayments.add(DataPayment(
-          name: client.name!,
-          amount: payment.amountPaid!,
+      loans = await ExpensesDatabase.instance.getExpensesByDate(widget.date);
+      for (var payment in loans) {
+        dataPayments.add(DataSales(
+          name: payment.description!,
+          amount: payment.amount!,
         ));
       }
-      consolidatePayments();
     } catch (e) {
       SsNotification.error('Error al obtener los pagos');
     }
@@ -65,22 +63,6 @@ class _CashBoxDataDialogState extends State<CashBoxDataDialog> {
     if (mounted) {
       setState(() {});
     }
-  }
-
-  void consolidatePayments() {
-    Map<String, double> consolidatedMap = {};
-    for (var dataPayment in dataPayments) {
-      if (consolidatedMap.containsKey(dataPayment.name)) {
-        consolidatedMap[dataPayment.name] =
-            consolidatedMap[dataPayment.name]! + dataPayment.amount;
-      } else {
-        consolidatedMap[dataPayment.name] = dataPayment.amount;
-      }
-    }
-
-    dataPayments = consolidatedMap.entries
-        .map((entry) => DataPayment(name: entry.key, amount: entry.value))
-        .toList();
   }
 
   @override
@@ -100,9 +82,14 @@ class _CashBoxDataDialogState extends State<CashBoxDataDialog> {
                     child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(dataPayments[index].name),
-                    Text(DoubleExtension()
-                        .toMoneySim(dataPayments[index].amount)),
+                    Expanded(child: Text(dataPayments[index].name)),
+                    Expanded(
+                      child: Text(
+                        DoubleExtension()
+                            .toMoneySim(dataPayments[index].amount),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
                   ],
                 ));
               },

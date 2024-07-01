@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/expenses_database.dart';
 import 'package:coyote/models/expense_model.dart';
+import 'package:coyote/modules/expenses/widgets/expenses_card.dart';
 import 'package:coyote/modules/sales/widget/sales_data_dialog.dart';
 import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/type/double_extension.dart';
@@ -42,7 +43,7 @@ class _ShowExpensesPageState extends State<ShowExpensesPage> {
   @override
   Widget build(BuildContext context) {
     return SsScaffold(
-      title: 'Ventas',
+      title: 'Gastos',
       body: FutureBuilder<Map<String, double>>(
         future: _getPaymentSumsByDate(),
         builder: (context, snapshot) {
@@ -63,7 +64,7 @@ class _ShowExpensesPageState extends State<ShowExpensesPage> {
                   onTap: () {
                     SsDialog.show(
                         context: context,
-                        content: SalesDataDialog(
+                        content: ExpensesDataDialog(
                           date: date,
                         ));
                   },

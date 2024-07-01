@@ -1,4 +1,5 @@
 import 'package:coyote/models/expense_model.dart';
+import 'package:coyote/type/date_time_extension.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ExpensesDatabase {
@@ -65,5 +66,22 @@ class ExpensesDatabase {
       description: maps[0]['description'],
       createAt: DateTime.fromMillisecondsSinceEpoch(maps[0]['create_at']),
     );
+  }
+
+  Future<List<ExpenseModel>> getExpensesByDate(String date) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(table);
+    final list = List.generate(maps.length, (i) {
+      return ExpenseModel(
+        id: maps[i]['id'],
+        amount: maps[i]['amount'],
+        description: maps[i]['description'],
+        createAt: DateTime.fromMillisecondsSinceEpoch(maps[i]['create_at']),
+      );
+    });
+
+    return list.where((element) {
+      return DateTimeExtension().toHumanize(element.createAt).contains(date);
+    }).toList();
   }
 }

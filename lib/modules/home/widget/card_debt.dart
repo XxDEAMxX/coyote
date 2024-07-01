@@ -7,6 +7,7 @@ import 'package:coyote/widgets/ss_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CardDebt extends ConsumerStatefulWidget {
   final LoanModel loan;
@@ -85,11 +86,16 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Text(
-                          client?.phoneNumber ?? '-',
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
+                        InkWell(
+                          onTap: () async {
+                            await _makePhoneCall(client!.phoneNumber!);
+                          },
+                          child: Text(
+                            client?.phoneNumber ?? '-',
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                         Text(
@@ -125,5 +131,13 @@ class _CardDebtState extends ConsumerState<CardDebt> {
         ),
       ),
     );
+  }
+
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 }

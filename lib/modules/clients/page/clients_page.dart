@@ -1,6 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:coyote/data/client_database.dart';
-import 'package:coyote/models/client_model.dart';
 import 'package:coyote/modules/clients/clients_provider.dart';
 import 'package:coyote/modules/clients/widgets/clients_card.dart';
 import 'package:coyote/routes/app_router.gr.dart';
