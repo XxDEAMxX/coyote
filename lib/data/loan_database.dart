@@ -42,12 +42,17 @@ class LoanDatabase {
 
   Future<int> insert(LoanModel client) async {
     final db = await instance.database;
-    return await db.insert(table, client.toMap());
+    final index = await db.insert(table, client.toMap());
+    await updatePosition(index, client.position!);
+    return index;
   }
 
   Future<List<LoanModel>> getAllLoans() async {
     final db = await instance.database;
-    final List<Map<String, dynamic>> maps = await db.query(table);
+    final List<Map<String, dynamic>> maps = await db.query(
+      table,
+      orderBy: 'position ASC',
+    );
     return List.generate(maps.length, (i) {
       return LoanModel(
         id: maps[i]['id'],
@@ -66,6 +71,7 @@ class LoanDatabase {
       table,
       where: 'id = ?',
       whereArgs: [id],
+      orderBy: 'create_at DESC',
     );
     return LoanModel(
       id: maps[0]['id'],
@@ -79,7 +85,8 @@ class LoanDatabase {
 
   Future<List<LoanModel>> getLoansByDate(String date) async {
     final db = await instance.database;
-    final List<Map<String, dynamic>> maps = await db.query(table);
+    final List<Map<String, dynamic>> maps =
+        await db.query(table, orderBy: 'create_at DESC');
     final list = List.generate(maps.length, (i) {
       return LoanModel(
         id: maps[i]['id'],
@@ -93,5 +100,36 @@ class LoanDatabase {
     return list.where((element) {
       return DateTimeExtension().toHumanize(element.createAt).contains(date);
     }).toList();
+  }
+
+  Future<void> updatePosition(int id, int newPosition) async {
+    final db = await instance.database;
+
+    final List<Map<String, dynamic>> existingItem = await db.query(
+      table,
+      where: 'position = ?',
+      whereArgs: [newPosition],
+    );
+
+    if (existingItem.isNotEmpty) {
+      await updatePosition(existingItem.first['id'], newPosition + 1);
+    }
+
+    await db.update(
+      table,
+      {'position': newPosition},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> update(LoanModel client) async {
+    final db = await instance.database;
+    return await db.update(
+      table,
+      client.toMap(),
+      where: 'id = ?',
+      whereArgs: [client.id],
+    );
   }
 }

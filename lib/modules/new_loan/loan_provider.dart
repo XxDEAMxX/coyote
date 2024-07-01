@@ -6,10 +6,11 @@ class LoanProvider extends StateNotifier<LoanState> {
   LoanProvider() : super(LoanState());
 
   Future<void> getAllLoans() async {
+    state = state.copyWith(loading: true);
     final list = await LoanDatabase.instance.getAllLoans();
-    state = state.copyWith(
-      loans: list,
-    );
+    // await Future.delayed(const Duration(seconds: 1));
+    state = state.copyWith(loans: list);
+    state = state.copyWith(loading: false);
   }
 }
 

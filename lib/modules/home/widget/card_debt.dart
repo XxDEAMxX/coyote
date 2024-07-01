@@ -1,9 +1,11 @@
 import 'package:coyote/data/client_database.dart';
 import 'package:coyote/models/client_model.dart';
 import 'package:coyote/models/loan_model.dart';
+import 'package:coyote/modules/home/widget/update_position_dialog.dart';
 import 'package:coyote/routes/app_router.dart';
 import 'package:coyote/routes/app_router.gr.dart';
 import 'package:coyote/widgets/ss_card.dart';
+import 'package:coyote/widgets/ss_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,6 +49,13 @@ class _CardDebtState extends ConsumerState<CardDebt> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      onLongPress: () {
+        print(widget.loan.id);
+        SsDialog.show(
+          context: context,
+          content: UpdatePositionDialog(id: widget.loan.id!),
+        );
+      },
       onTap: () {
         appRouter.push(DebtRoute(
           loanId: widget.loan.id!,
@@ -74,13 +83,13 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          client?.name ?? '-',
+                          '${client?.name}',
                           style: TextStyle(
                             fontSize: 24.sp,
                           ),
                         ),
                         Text(
-                          client?.address ?? '-',
+                          '${client?.address}',
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
@@ -91,7 +100,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                             await _makePhoneCall(client!.phoneNumber!);
                           },
                           child: Text(
-                            client?.phoneNumber ?? '-',
+                            '${client?.phoneNumber}',
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,

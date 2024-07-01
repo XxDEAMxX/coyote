@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/expenses_database.dart';
 import 'package:coyote/models/expense_model.dart';
 import 'package:coyote/modules/expenses/widgets/expenses_card.dart';
-import 'package:coyote/modules/sales/widget/sales_data_dialog.dart';
 import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_app_bar.dart';

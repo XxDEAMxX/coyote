@@ -17,8 +17,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  bool loading = false;
-
   @override
   void initState() {
     super.initState();
@@ -29,20 +27,17 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> getClients() async {
     try {
-      loading = true;
       setState(() {});
       await ref.read(loanProvider.notifier).getAllLoans();
     } catch (e) {
       print(e);
-    } finally {
-      loading = false;
-      setState(() {});
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final list = ref.watch(loanProvider.select((state) => state.loans));
+    final loading = ref.watch(loanProvider.select((state) => state.loading));
     return SsScaffold(
       actions: <Widget>[
         IconButton(
@@ -68,8 +63,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               case '5':
                 appRouter.push(const CashBoxRoute());
                 break;
-              // case '6':
-              //   break;
               case '7':
                 appRouter.push(const ShowExpensesRoute());
                 break;
@@ -93,10 +86,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               value: '5',
               child: Text('Ver Caja'),
             ),
-            // const PopupMenuItem<String>(
-            //   value: '6',
-            //   child: Text('Datos del Dia'),
-            // ),
             const PopupMenuItem<String>(
               value: '7',
               child: Text('Gastos Registrados'),

@@ -1,8 +1,5 @@
-import 'package:coyote/data/client_database.dart';
 import 'package:coyote/data/expenses_database.dart';
-import 'package:coyote/data/loan_database.dart';
 import 'package:coyote/models/expense_model.dart';
-import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_card.dart';
 import 'package:coyote/widgets/ss_notification.dart';
