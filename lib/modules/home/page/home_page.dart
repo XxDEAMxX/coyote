@@ -63,18 +63,18 @@ class _HomePageState extends ConsumerState<HomePage> {
               case '2':
                 appRouter.push(const SalesRoute());
                 break;
-              case '3':
-                break;
               case '4':
                 break;
               case '5':
+                appRouter.push(const CashBoxRoute());
                 break;
-              case '6':
-                break;
+              // case '6':
+              //   break;
               case '7':
+                appRouter.push(const ShowExpensesRoute());
                 break;
               case '8':
-                appRouter.push(const ExpensesRoute());
+                appRouter.push(const RegisterExpensesRoute());
                 break;
               case '9':
                 break;
@@ -87,20 +87,16 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             const PopupMenuItem<String>(
               value: '2',
-              child: Text('Todas las Ventas'),
-            ),
-            const PopupMenuItem<String>(
-              value: '3',
-              child: Text('Ventas del Dia'),
+              child: Text('Ver Ventas'),
             ),
             const PopupMenuItem<String>(
               value: '5',
               child: Text('Ver Caja'),
             ),
-            const PopupMenuItem<String>(
-              value: '6',
-              child: Text('Datos del Dia'),
-            ),
+            // const PopupMenuItem<String>(
+            //   value: '6',
+            //   child: Text('Datos del Dia'),
+            // ),
             const PopupMenuItem<String>(
               value: '7',
               child: Text('Gastos Registrados'),

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:coyote/modules/cash_box/cash_box_router.dart';
 import 'package:coyote/modules/clients/clients_router.dart';
 import 'package:coyote/modules/debt/debt_router.dart';
 import 'package:coyote/modules/expenses/expenses_router.dart';
@@ -17,6 +18,7 @@ class AppRouter extends $AppRouter {
         ...newLoanRoutes,
         ...clientsRoutes,
         ...salesRoutes,
+        ...cashBoxRoutes,
       ];
 
   bool contain(PageInfo page) {

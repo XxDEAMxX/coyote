@@ -1,4 +1,5 @@
 import 'package:coyote/models/loan_model.dart';
+import 'package:coyote/type/date_time_extension.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LoanDatabase {
@@ -74,5 +75,23 @@ class LoanDatabase {
       quotas: maps[0]['quotas'],
       createAt: DateTime.fromMillisecondsSinceEpoch(maps[0]['create_at']),
     );
+  }
+
+  Future<List<LoanModel>> getLoansByDate(String date) async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(table);
+    final list = List.generate(maps.length, (i) {
+      return LoanModel(
+        id: maps[i]['id'],
+        position: maps[i]['position'],
+        clientId: maps[i]['client_id'],
+        amount: maps[i]['amount'],
+        quotas: maps[i]['quotas'],
+        createAt: DateTime.fromMillisecondsSinceEpoch(maps[i]['create_at']),
+      );
+    });
+    return list.where((element) {
+      return DateTimeExtension().toHumanize(element.createAt).contains(date);
+    }).toList();
   }
 }

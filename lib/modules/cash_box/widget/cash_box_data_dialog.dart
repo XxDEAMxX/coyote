@@ -1,7 +1,6 @@
 import 'package:coyote/data/client_database.dart';
 import 'package:coyote/data/loan_database.dart';
 import 'package:coyote/data/payments_database.dart';
-import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/models/payment_model.dart';
 import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_card.dart';
@@ -9,17 +8,17 @@ import 'package:coyote/widgets/ss_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DataSales {
+class DataPayment {
   final String name;
   final double amount;
-  DataSales({
+  DataPayment({
     required this.name,
     required this.amount,
   });
 }
 
-class SalesDataDialog extends StatefulWidget {
-  const SalesDataDialog({
+class CashBoxDataDialog extends StatefulWidget {
+  const CashBoxDataDialog({
     super.key,
     required this.date,
   });
@@ -27,12 +26,12 @@ class SalesDataDialog extends StatefulWidget {
   final String date;
 
   @override
-  State<SalesDataDialog> createState() => _SalesDataDialogState();
+  State<CashBoxDataDialog> createState() => _CashBoxDataDialogState();
 }
 
-class _SalesDataDialogState extends State<SalesDataDialog> {
-  List<LoanModel> loans = [];
-  List<DataSales> dataPayments = [];
+class _CashBoxDataDialogState extends State<CashBoxDataDialog> {
+  List<PaymentModel> payments = [];
+  List<DataPayment> dataPayments = [];
   bool loading = false;
 
   @override
@@ -49,13 +48,13 @@ class _SalesDataDialogState extends State<SalesDataDialog> {
       setState(() {});
     }
     try {
-      loans = await LoanDatabase.instance.getLoansByDate(widget.date);
-      for (var payment in loans) {
-        final client =
-            await ClientDatabase.instance.getClient(payment.clientId!);
-        dataPayments.add(DataSales(
+      payments = await PaymentsDatabase.instance.getPaymentsByDate(widget.date);
+      for (var payment in payments) {
+        final loan = await LoanDatabase.instance.getLoanById(payment.loanId!);
+        final client = await ClientDatabase.instance.getClient(loan.clientId!);
+        dataPayments.add(DataPayment(
           name: client.name!,
-          amount: payment.amount!,
+          amount: payment.amountPaid!,
         ));
       }
     } catch (e) {

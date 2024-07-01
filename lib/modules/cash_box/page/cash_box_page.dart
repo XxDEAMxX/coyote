@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:coyote/data/loan_database.dart';
-import 'package:coyote/models/loan_model.dart';
-import 'package:coyote/modules/sales/widget/sales_data_dialog.dart';
+import 'package:coyote/data/payments_database.dart';
+import 'package:coyote/models/payment_model.dart';
+import 'package:coyote/modules/cash_box/widget/cash_box_data_dialog.dart';
 import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/type/double_extension.dart';
 import 'package:coyote/widgets/ss_app_bar.dart';
@@ -11,15 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 @RoutePage()
-class SalesPage extends StatefulWidget {
-  const SalesPage({super.key});
+class CashBoxPage extends StatefulWidget {
+  const CashBoxPage({super.key});
 
   @override
-  State<SalesPage> createState() => _SalesPageState();
+  State<CashBoxPage> createState() => _CashBoxPageState();
 }
 
-class _SalesPageState extends State<SalesPage> {
-  List<LoanModel> payments = [];
+class _CashBoxPageState extends State<CashBoxPage> {
+  List<PaymentModel> payments = [];
 
   @override
   initState() {
@@ -31,7 +31,7 @@ class _SalesPageState extends State<SalesPage> {
 
   Future<void> fetchPayments() async {
     try {
-      payments = await LoanDatabase.instance.getAllLoans();
+      payments = await PaymentsDatabase.instance.getAllPayments();
     } catch (e) {
       print(e);
     } finally {
@@ -42,7 +42,7 @@ class _SalesPageState extends State<SalesPage> {
   @override
   Widget build(BuildContext context) {
     return SsScaffold(
-      title: 'Ventas',
+      title: 'Caja',
       body: FutureBuilder<Map<String, double>>(
         future: _getPaymentSumsByDate(),
         builder: (context, snapshot) {
@@ -63,7 +63,7 @@ class _SalesPageState extends State<SalesPage> {
                   onTap: () {
                     SsDialog.show(
                         context: context,
-                        content: SalesDataDialog(
+                        content: CashBoxDataDialog(
                           date: date,
                         ));
                   },
@@ -105,14 +105,14 @@ class _SalesPageState extends State<SalesPage> {
     Map<String, double> paymentSumsByDate = {};
 
     for (var payment in payments) {
-      if (payment.createAt != null) {
+      if (payment.updatedAt != null) {
         String formattedDate =
-            DateTimeExtension().toHumanize(payment.createAt!);
+            DateTimeExtension().toHumanize(payment.updatedAt!);
         if (paymentSumsByDate.containsKey(formattedDate)) {
           paymentSumsByDate[formattedDate] =
-              paymentSumsByDate[formattedDate]! + payment.amount!;
+              paymentSumsByDate[formattedDate]! + payment.amountPaid!;
         } else {
-          paymentSumsByDate[formattedDate] = payment.amount!;
+          paymentSumsByDate[formattedDate] = payment.amountPaid!;
         }
       }
     }

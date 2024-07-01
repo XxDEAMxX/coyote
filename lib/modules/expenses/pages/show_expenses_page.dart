@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:coyote/data/loan_database.dart';
-import 'package:coyote/models/loan_model.dart';
+import 'package:coyote/data/expenses_database.dart';
+import 'package:coyote/models/expense_model.dart';
 import 'package:coyote/modules/sales/widget/sales_data_dialog.dart';
 import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/type/double_extension.dart';
@@ -11,15 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 @RoutePage()
-class SalesPage extends StatefulWidget {
-  const SalesPage({super.key});
+class ShowExpensesPage extends StatefulWidget {
+  const ShowExpensesPage({super.key});
 
   @override
-  State<SalesPage> createState() => _SalesPageState();
+  State<ShowExpensesPage> createState() => _ShowExpensesPageState();
 }
 
-class _SalesPageState extends State<SalesPage> {
-  List<LoanModel> payments = [];
+class _ShowExpensesPageState extends State<ShowExpensesPage> {
+  List<ExpenseModel> payments = [];
 
   @override
   initState() {
@@ -31,7 +31,7 @@ class _SalesPageState extends State<SalesPage> {
 
   Future<void> fetchPayments() async {
     try {
-      payments = await LoanDatabase.instance.getAllLoans();
+      payments = await ExpensesDatabase.instance.getAllExpenses();
     } catch (e) {
       print(e);
     } finally {

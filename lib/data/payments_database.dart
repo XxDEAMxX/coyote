@@ -56,7 +56,7 @@ class PaymentsDatabase {
   Future<void> insertAll(PaymentModel client, int quotas) async {
     final db = await instance.database;
     for (int i = 0; i < quotas; i++) {
-      await db.insert(table, client.toMapAll(i));
+      await db.insert(table, client.toMapAll(i + 1));
     }
   }
 

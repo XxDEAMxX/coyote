@@ -8,52 +8,55 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i8;
-import 'package:coyote/models/client_model.dart' as _i10;
-import 'package:coyote/modules/clients/page/cliente_new_page.dart' as _i1;
-import 'package:coyote/modules/clients/page/clients_page.dart' as _i2;
-import 'package:coyote/modules/debt/page/debt_page.dart' as _i3;
-import 'package:coyote/modules/expenses/pages/expenses_page.dart' as _i4;
+import 'package:auto_route/auto_route.dart' as _i10;
+import 'package:coyote/models/client_model.dart' as _i12;
+import 'package:coyote/modules/cash_box/page/cash_box_page.dart' as _i1;
+import 'package:coyote/modules/clients/page/cliente_new_page.dart' as _i2;
+import 'package:coyote/modules/clients/page/clients_page.dart' as _i3;
+import 'package:coyote/modules/debt/page/debt_page.dart' as _i4;
+import 'package:coyote/modules/expenses/pages/register_expenses_page.dart'
+    as _i7;
+import 'package:coyote/modules/expenses/pages/show_expenses_page.dart' as _i9;
 import 'package:coyote/modules/home/page/home_page.dart' as _i5;
 import 'package:coyote/modules/new_loan/page/new_loan_page.dart' as _i6;
-import 'package:coyote/modules/sales/page/sales_page.dart' as _i7;
-import 'package:flutter/material.dart' as _i9;
+import 'package:coyote/modules/sales/page/sales_page.dart' as _i8;
+import 'package:flutter/material.dart' as _i11;
 
-abstract class $AppRouter extends _i8.RootStackRouter {
+abstract class $AppRouter extends _i10.RootStackRouter {
   $AppRouter({super.navigatorKey});
 
   @override
-  final Map<String, _i8.PageFactory> pagesMap = {
-    ClientNewRoute.name: (routeData) {
-      return _i8.AutoRoutePage<dynamic>(
+  final Map<String, _i10.PageFactory> pagesMap = {
+    CashBoxRoute.name: (routeData) {
+      return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i1.ClientNewPage(),
+        child: const _i1.CashBoxPage(),
+      );
+    },
+    ClientNewRoute.name: (routeData) {
+      return _i10.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i2.ClientNewPage(),
       );
     },
     ClientsRoute.name: (routeData) {
-      return _i8.AutoRoutePage<dynamic>(
+      return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i2.ClientsPage(),
+        child: const _i3.ClientsPage(),
       );
     },
     DebtRoute.name: (routeData) {
       final args = routeData.argsAs<DebtRouteArgs>();
-      return _i8.AutoRoutePage<dynamic>(
+      return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i3.DebtPage(
+        child: _i4.DebtPage(
           loanId: args.loanId,
           key: args.key,
         ),
       );
     },
-    ExpensesRoute.name: (routeData) {
-      return _i8.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i4.ExpensesPage(),
-      );
-    },
     HomeRoute.name: (routeData) {
-      return _i8.AutoRoutePage<dynamic>(
+      return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const _i5.HomePage(),
       );
@@ -61,7 +64,7 @@ abstract class $AppRouter extends _i8.RootStackRouter {
     NewLoanRoute.name: (routeData) {
       final args = routeData.argsAs<NewLoanRouteArgs>(
           orElse: () => const NewLoanRouteArgs());
-      return _i8.AutoRoutePage<dynamic>(
+      return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i6.NewLoanPage(
           key: args.key,
@@ -69,19 +72,45 @@ abstract class $AppRouter extends _i8.RootStackRouter {
         ),
       );
     },
-    SalesRoute.name: (routeData) {
-      return _i8.AutoRoutePage<dynamic>(
+    RegisterExpensesRoute.name: (routeData) {
+      return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i7.SalesPage(),
+        child: const _i7.RegisterExpensesPage(),
+      );
+    },
+    SalesRoute.name: (routeData) {
+      return _i10.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i8.SalesPage(),
+      );
+    },
+    ShowExpensesRoute.name: (routeData) {
+      return _i10.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i9.ShowExpensesPage(),
       );
     },
   };
 }
 
 /// generated route for
-/// [_i1.ClientNewPage]
-class ClientNewRoute extends _i8.PageRouteInfo<void> {
-  const ClientNewRoute({List<_i8.PageRouteInfo>? children})
+/// [_i1.CashBoxPage]
+class CashBoxRoute extends _i10.PageRouteInfo<void> {
+  const CashBoxRoute({List<_i10.PageRouteInfo>? children})
+      : super(
+          CashBoxRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'CashBoxRoute';
+
+  static const _i10.PageInfo<void> page = _i10.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i2.ClientNewPage]
+class ClientNewRoute extends _i10.PageRouteInfo<void> {
+  const ClientNewRoute({List<_i10.PageRouteInfo>? children})
       : super(
           ClientNewRoute.name,
           initialChildren: children,
@@ -89,13 +118,13 @@ class ClientNewRoute extends _i8.PageRouteInfo<void> {
 
   static const String name = 'ClientNewRoute';
 
-  static const _i8.PageInfo<void> page = _i8.PageInfo<void>(name);
+  static const _i10.PageInfo<void> page = _i10.PageInfo<void>(name);
 }
 
 /// generated route for
-/// [_i2.ClientsPage]
-class ClientsRoute extends _i8.PageRouteInfo<void> {
-  const ClientsRoute({List<_i8.PageRouteInfo>? children})
+/// [_i3.ClientsPage]
+class ClientsRoute extends _i10.PageRouteInfo<void> {
+  const ClientsRoute({List<_i10.PageRouteInfo>? children})
       : super(
           ClientsRoute.name,
           initialChildren: children,
@@ -103,16 +132,16 @@ class ClientsRoute extends _i8.PageRouteInfo<void> {
 
   static const String name = 'ClientsRoute';
 
-  static const _i8.PageInfo<void> page = _i8.PageInfo<void>(name);
+  static const _i10.PageInfo<void> page = _i10.PageInfo<void>(name);
 }
 
 /// generated route for
-/// [_i3.DebtPage]
-class DebtRoute extends _i8.PageRouteInfo<DebtRouteArgs> {
+/// [_i4.DebtPage]
+class DebtRoute extends _i10.PageRouteInfo<DebtRouteArgs> {
   DebtRoute({
     required int loanId,
-    _i9.Key? key,
-    List<_i8.PageRouteInfo>? children,
+    _i11.Key? key,
+    List<_i10.PageRouteInfo>? children,
   }) : super(
           DebtRoute.name,
           args: DebtRouteArgs(
@@ -124,8 +153,8 @@ class DebtRoute extends _i8.PageRouteInfo<DebtRouteArgs> {
 
   static const String name = 'DebtRoute';
 
-  static const _i8.PageInfo<DebtRouteArgs> page =
-      _i8.PageInfo<DebtRouteArgs>(name);
+  static const _i10.PageInfo<DebtRouteArgs> page =
+      _i10.PageInfo<DebtRouteArgs>(name);
 }
 
 class DebtRouteArgs {
@@ -136,7 +165,7 @@ class DebtRouteArgs {
 
   final int loanId;
 
-  final _i9.Key? key;
+  final _i11.Key? key;
 
   @override
   String toString() {
@@ -145,23 +174,9 @@ class DebtRouteArgs {
 }
 
 /// generated route for
-/// [_i4.ExpensesPage]
-class ExpensesRoute extends _i8.PageRouteInfo<void> {
-  const ExpensesRoute({List<_i8.PageRouteInfo>? children})
-      : super(
-          ExpensesRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ExpensesRoute';
-
-  static const _i8.PageInfo<void> page = _i8.PageInfo<void>(name);
-}
-
-/// generated route for
 /// [_i5.HomePage]
-class HomeRoute extends _i8.PageRouteInfo<void> {
-  const HomeRoute({List<_i8.PageRouteInfo>? children})
+class HomeRoute extends _i10.PageRouteInfo<void> {
+  const HomeRoute({List<_i10.PageRouteInfo>? children})
       : super(
           HomeRoute.name,
           initialChildren: children,
@@ -169,16 +184,16 @@ class HomeRoute extends _i8.PageRouteInfo<void> {
 
   static const String name = 'HomeRoute';
 
-  static const _i8.PageInfo<void> page = _i8.PageInfo<void>(name);
+  static const _i10.PageInfo<void> page = _i10.PageInfo<void>(name);
 }
 
 /// generated route for
 /// [_i6.NewLoanPage]
-class NewLoanRoute extends _i8.PageRouteInfo<NewLoanRouteArgs> {
+class NewLoanRoute extends _i10.PageRouteInfo<NewLoanRouteArgs> {
   NewLoanRoute({
-    _i9.Key? key,
-    _i10.ClientModel? client,
-    List<_i8.PageRouteInfo>? children,
+    _i11.Key? key,
+    _i12.ClientModel? client,
+    List<_i10.PageRouteInfo>? children,
   }) : super(
           NewLoanRoute.name,
           args: NewLoanRouteArgs(
@@ -190,8 +205,8 @@ class NewLoanRoute extends _i8.PageRouteInfo<NewLoanRouteArgs> {
 
   static const String name = 'NewLoanRoute';
 
-  static const _i8.PageInfo<NewLoanRouteArgs> page =
-      _i8.PageInfo<NewLoanRouteArgs>(name);
+  static const _i10.PageInfo<NewLoanRouteArgs> page =
+      _i10.PageInfo<NewLoanRouteArgs>(name);
 }
 
 class NewLoanRouteArgs {
@@ -200,9 +215,9 @@ class NewLoanRouteArgs {
     this.client,
   });
 
-  final _i9.Key? key;
+  final _i11.Key? key;
 
-  final _i10.ClientModel? client;
+  final _i12.ClientModel? client;
 
   @override
   String toString() {
@@ -211,9 +226,23 @@ class NewLoanRouteArgs {
 }
 
 /// generated route for
-/// [_i7.SalesPage]
-class SalesRoute extends _i8.PageRouteInfo<void> {
-  const SalesRoute({List<_i8.PageRouteInfo>? children})
+/// [_i7.RegisterExpensesPage]
+class RegisterExpensesRoute extends _i10.PageRouteInfo<void> {
+  const RegisterExpensesRoute({List<_i10.PageRouteInfo>? children})
+      : super(
+          RegisterExpensesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RegisterExpensesRoute';
+
+  static const _i10.PageInfo<void> page = _i10.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i8.SalesPage]
+class SalesRoute extends _i10.PageRouteInfo<void> {
+  const SalesRoute({List<_i10.PageRouteInfo>? children})
       : super(
           SalesRoute.name,
           initialChildren: children,
@@ -221,5 +250,19 @@ class SalesRoute extends _i8.PageRouteInfo<void> {
 
   static const String name = 'SalesRoute';
 
-  static const _i8.PageInfo<void> page = _i8.PageInfo<void>(name);
+  static const _i10.PageInfo<void> page = _i10.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i9.ShowExpensesPage]
+class ShowExpensesRoute extends _i10.PageRouteInfo<void> {
+  const ShowExpensesRoute({List<_i10.PageRouteInfo>? children})
+      : super(
+          ShowExpensesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ShowExpensesRoute';
+
+  static const _i10.PageInfo<void> page = _i10.PageInfo<void>(name);
 }
