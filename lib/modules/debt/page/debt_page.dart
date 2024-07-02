@@ -59,7 +59,12 @@ class _DebtPageState extends ConsumerState<DebtPage>
     final totalAmountPaid =
         payments.fold<double>(0, (sum, item) => sum + (item.amountPaid ?? 0));
     final balance = (loan?.amount ?? 0) - totalAmountPaid;
-
+    final int toPay = payments.indexWhere(
+      (element) => element.amountToBePaid != element.amountPaid,
+    );
+    final bool paid = payments.any((element) =>
+        DateTimeExtension().toHumanize(element.updatedAt) ==
+        DateTimeExtension().toHumanize(DateTime.now()));
     return SsScaffold(
       title: 'Pagos',
       body: loading
@@ -90,14 +95,13 @@ class _DebtPageState extends ConsumerState<DebtPage>
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
-                      children: payments.map((e) {
-                        final toPay = e.amountToBePaid != e.amountPaid;
-                        final paid =
-                            DateTimeExtension().toHumanize(e.updatedAt) ==
-                                DateTimeExtension().toHumanize(DateTime.now());
+                      children: payments.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final e = entry.value;
+
                         return CardPayments(
                           payment: e,
-                          toPay: toPay && !paid,
+                          toPay: toPay == index && !paid,
                         );
                       }).toList(),
                     ),

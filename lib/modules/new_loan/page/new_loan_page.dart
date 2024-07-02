@@ -50,8 +50,6 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
   @override
   Widget build(BuildContext context) {
     const color = Colors.black;
-    final String title =
-        widget.client == null ? 'Nueva Prestamo' : 'Editar Prestamo';
     return SsScaffold(
       body: Container(
         color: Colors.white,
