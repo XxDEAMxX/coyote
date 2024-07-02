@@ -18,7 +18,6 @@ class SsScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        forceMaterialTransparency: true,
         iconTheme: IconThemeData(color: textColor),
         centerTitle: true,
         actions: actions,

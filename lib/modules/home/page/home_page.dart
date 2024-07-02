@@ -39,7 +39,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final list = ref.watch(loanProvider.select((state) => state.loans));
     final loading = ref.watch(loanProvider.select((state) => state.loading));
     return SsScaffold(
-      actions: <Widget>[
+      actions: [
         IconButton(
           icon: Icon(
             Icons.add_circle_outline,
@@ -102,16 +102,19 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
       ],
       title: 'Home',
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemBuilder: (context, index) {
-                return CardDebt(
-                  loan: list[index],
-                );
-              },
-              itemCount: list.length,
-            ),
+      body: Container(
+        color: Colors.black,
+        child: loading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                itemBuilder: (context, index) {
+                  return CardDebt(
+                    loan: list[index],
+                  );
+                },
+                itemCount: list.length,
+              ),
+      ),
     );
   }
 }

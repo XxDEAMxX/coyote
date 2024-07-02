@@ -1,30 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/loan_database.dart';
 import 'package:coyote/models/loan_model.dart';
-import 'package:coyote/models/payment_model.dart';
 import 'package:coyote/modules/debt/debt_provider.dart';
 import 'package:coyote/modules/debt/widget/card_payments.dart';
 import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/widgets/ss_app_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 @RoutePage()
 class DebtPage extends ConsumerStatefulWidget {
   final int loanId;
+
   const DebtPage({
     required this.loanId,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   ConsumerState<DebtPage> createState() => _DebtPageState();
 }
 
-class _DebtPageState extends ConsumerState<DebtPage> {
+class _DebtPageState extends ConsumerState<DebtPage>
+    with AutomaticKeepAliveClientMixin {
   LoanModel? loan;
   bool loading = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -36,36 +40,30 @@ class _DebtPageState extends ConsumerState<DebtPage> {
 
   Future<void> getLoans() async {
     try {
-      loading = true;
-      setState(() {});
+      setState(() => loading = true);
       loan = await LoanDatabase.instance.getLoanById(widget.loanId);
       await ref.read(debtProvider.notifier).getPayments(loanId: loan!.id!);
     } catch (e) {
-      print(e);
+      print('Error fetching loans: $e');
     } finally {
-      loading = false;
-      if (mounted){
-      setState(() {});
-    }}
+      if (mounted) {
+        setState(() => loading = false);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<PaymentModel> payments =
-        ref.watch(debtProvider.select((value) => value.payments));
-    final double totalAmountPaid =
-        payments.fold(0, (sum, item) => sum + item.amountPaid!);
-    final double balance = (loan?.amount ?? 0) - (totalAmountPaid);
-    final int toPay = payments.indexWhere(
-      (element) => element.amountToBePaid != element.amountPaid,
-    );
-    final bool paid = payments.any((element) =>
-        DateTimeExtension().toHumanize(element.updatedAt) ==
-        DateTimeExtension().toHumanize(DateTime.now()));
+    super.build(context);
+    final payments = ref.watch(debtProvider.select((value) => value.payments));
+    final totalAmountPaid =
+        payments.fold<double>(0, (sum, item) => sum + (item.amountPaid ?? 0));
+    final balance = (loan?.amount ?? 0) - totalAmountPaid;
+
     return SsScaffold(
       title: 'Pagos',
       body: loading
-          ? const CircularProgressIndicator()
+          ? Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 Container(
@@ -80,118 +78,60 @@ class _DebtPageState extends ConsumerState<DebtPage> {
                       EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 5.h),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Total Venta: ',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                              ),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          SizedBox(width: 14.w),
-                          Expanded(
-                            child: Text(
-                              '${loan?.amount}',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Salgo Venta:',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                              ),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          SizedBox(width: 14.w),
-                          Expanded(
-                            child: Text(
-                              '$balance',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Codigo:',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                              ),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          SizedBox(width: 20.w),
-                          Expanded(
-                            child: Text(
-                              '${loan?.id}',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Fecha Venta:',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                              ),
-                              textAlign: TextAlign.end,
-                            ),
-                          ),
-                          SizedBox(width: 20.w),
-                          Expanded(
-                            child: Text(
-                              DateTimeExtension().toHumanize(loan?.createAt),
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildRow(
+                          'Total Venta:', loan?.amount.toString() ?? 'N/A'),
+                      _buildRow('Saldo Venta:', balance.toString()),
+                      _buildRow('Codigo:', loan?.id.toString() ?? 'N/A'),
+                      _buildRow('Fecha Venta:',
+                          DateTimeExtension().toHumanize(loan?.createAt)),
                     ],
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return CardPayments(
-                        payment: payments[index],
-                        toPay: index == toPay && !paid,
-                      );
-                    },
-                    itemCount: payments.length,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: payments.map((e) {
+                        final toPay = e.amountToBePaid != e.amountPaid;
+                        final paid =
+                            DateTimeExtension().toHumanize(e.updatedAt) ==
+                                DateTimeExtension().toHumanize(DateTime.now());
+                        return CardPayments(
+                          payment: e,
+                          toPay: toPay && !paid,
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
               ],
             ),
+    );
+  }
+
+  Widget _buildRow(String label, String value) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14.sp,
+            ),
+            textAlign: TextAlign.end,
+          ),
+        ),
+        SizedBox(width: 14.w),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.start,
+          ),
+        ),
+      ],
     );
   }
 }

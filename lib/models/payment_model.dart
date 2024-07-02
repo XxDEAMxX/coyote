@@ -52,12 +52,11 @@ class PaymentModel {
     };
   }
 
-  Map<String, dynamic> toMapAll(int quota) {
+  Map<String, dynamic> toMapAll(int quota, DateTime date) {
     return {
       'loan_id': loanId,
       'quota_number': quota,
-      'date_payment':
-          DateTime.now().add(Duration(days: quota)).millisecondsSinceEpoch,
+      'date_payment': date.millisecondsSinceEpoch,
       'amount_paid': amountPaid,
       'amount_to_be_paid': amountToBePaid,
       'updated_at': updatedAt?.millisecondsSinceEpoch,

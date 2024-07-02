@@ -108,7 +108,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                           ),
                         ),
                         Text(
-                          'Lunes a Sabado',
+                          '${widget.loan.workDays}',
                           style: TextStyle(
                             color: Colors.red,
                             fontSize: 12.sp,

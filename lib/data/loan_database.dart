@@ -30,6 +30,7 @@ class LoanDatabase {
       client_id INTEGER NOT NULL,
       amount REAL NOT NULL,
       quotas INTEGER NOT NULL,
+      work_days TEXT NOT NULL,
       create_at INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
     )
   ''');
@@ -60,6 +61,7 @@ class LoanDatabase {
         clientId: maps[i]['client_id'],
         amount: maps[i]['amount'],
         quotas: maps[i]['quotas'],
+        workDays: maps[i]['work_days'],
         createAt: DateTime.fromMillisecondsSinceEpoch(maps[i]['create_at']),
       );
     });
@@ -79,6 +81,7 @@ class LoanDatabase {
       clientId: maps[0]['client_id'],
       amount: maps[0]['amount'],
       quotas: maps[0]['quotas'],
+      workDays: maps[0]['work_days'],
       createAt: DateTime.fromMillisecondsSinceEpoch(maps[0]['create_at']),
     );
   }
@@ -94,6 +97,7 @@ class LoanDatabase {
         clientId: maps[i]['client_id'],
         amount: maps[i]['amount'],
         quotas: maps[i]['quotas'],
+        workDays: maps[i]['work_days'],
         createAt: DateTime.fromMillisecondsSinceEpoch(maps[i]['create_at']),
       );
     });

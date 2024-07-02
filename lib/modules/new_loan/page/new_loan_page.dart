@@ -9,6 +9,7 @@ import 'package:coyote/modules/new_loan/loan_provider.dart';
 import 'package:coyote/routes/app_router.dart';
 import 'package:coyote/widgets/ss_app_bar.dart';
 import 'package:coyote/widgets/ss_button.dart';
+import 'package:coyote/widgets/ss_dropdown.dart';
 import 'package:coyote/widgets/ss_notification.dart';
 import 'package:coyote/widgets/ss_text_input.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController quotasController = TextEditingController();
+  String? workDays;
 
   @override
   void initState() {
@@ -48,6 +50,8 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
   @override
   Widget build(BuildContext context) {
     const color = Colors.black;
+    final String title =
+        widget.client == null ? 'Nueva Prestamo' : 'Editar Prestamo';
     return SsScaffold(
       body: Container(
         color: Colors.white,
@@ -173,6 +177,26 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
                   keyboardType: TextInputType.number,
                 ),
                 SizedBox(height: 20.h),
+                Text(
+                  'Dias a cobrar*',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    color: color,
+                  ),
+                ),
+                SsDropdown(
+                  hint: 'ej. Lunes a Domingo',
+                  onChanged: (value) {
+                    workDays = value;
+                    setState(() {});
+                  },
+                  options: [
+                    'Lunes a Viernes',
+                    'Lunes a Sabados',
+                    'Lunes a Domingo',
+                  ],
+                ),
+                SizedBox(height: 20.h),
                 SsButton(
                   enable: _enable(),
                   loading: loading,
@@ -208,7 +232,8 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
         phoneController.text.isNotEmpty &&
         positionController.text.isNotEmpty &&
         amountController.text.isNotEmpty &&
-        quotasController.text.isNotEmpty;
+        quotasController.text.isNotEmpty &&
+        workDays != null;
   }
 
   Future<void> getClients() async {
@@ -238,6 +263,11 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
       SsNotification.warning('Numero de telefono no valido');
       return;
     }
+    if (workDays == null) {
+      SsNotification.warning('Selecciona los dias de trabajo');
+      return;
+    }
+
     loading = true;
     setState(() {});
 
@@ -258,6 +288,7 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
         clientId: widget.client != null ? widget.client!.id! : clientId,
         quotas: quotas,
         createAt: DateTime.now(),
+        workDays: workDays!,
       );
       final loanId = await LoanDatabase.instance.insert(loanModel);
       final PaymentModel paymentModel = PaymentModel(
@@ -268,7 +299,8 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
         quotaNumber: 1,
         updatedAt: null,
       );
-      await PaymentsDatabase.instance.insertAll(paymentModel, quotas);
+      await PaymentsDatabase.instance
+          .insertAll(paymentModel, quotas, workDays!);
       await ref.read(loanProvider.notifier).getAllLoans();
       appRouter.maybePop();
     } catch (e) {

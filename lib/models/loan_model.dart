@@ -5,6 +5,7 @@ class LoanModel {
   final double? amount;
   final int? quotas;
   final DateTime? createAt;
+  final String? workDays;
 
   LoanModel({
     this.id,
@@ -13,6 +14,7 @@ class LoanModel {
     this.amount,
     this.quotas,
     this.createAt,
+    this.workDays,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,6 +24,7 @@ class LoanModel {
       'amount': amount,
       'quotas': quotas,
       'create_at': createAt?.millisecondsSinceEpoch,
+      'work_days': workDays,
     };
   }
 }

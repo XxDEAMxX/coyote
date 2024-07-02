@@ -53,10 +53,26 @@ class PaymentsDatabase {
     return await db.insert(table, client.toMap());
   }
 
-  Future<void> insertAll(PaymentModel client, int quotas) async {
+  Future<void> insertAll(
+      PaymentModel client, int quotas, String workDays) async {
     final db = await instance.database;
+    DateTime date = DateTime.now();
+
     for (int i = 0; i < quotas; i++) {
-      await db.insert(table, client.toMapAll(i + 1));
+      if (workDays.contains('Lunes a Viernes')) {
+        if (date.weekday == DateTime.saturday) {
+          date = date.add(Duration(days: 2));
+        } else if (date.weekday == DateTime.sunday) {
+          date = date.add(Duration(days: 1));
+        }
+      } else if (workDays.contains('Lunes a Sabado')) {
+        if (date.weekday == DateTime.sunday) {
+          date = date.add(Duration(days: 1));
+        }
+      }
+      await db.insert(table, client.toMapAll(i + 1, date));
+      // Incrementar la fecha
+      date = date.add(Duration(days: 1));
     }
   }
 
