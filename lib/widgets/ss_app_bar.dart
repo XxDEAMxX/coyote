@@ -6,10 +6,12 @@ class SsScaffold extends StatelessWidget {
   final String title;
   final List<Widget>? actions;
   final Color textColor;
+  final Color? backgroundColor;
   const SsScaffold({
     required this.body,
     required this.title,
     this.textColor = Colors.black,
+    this.backgroundColor,
     this.actions,
     super.key,
   });
@@ -17,6 +19,7 @@ class SsScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         iconTheme: IconThemeData(color: textColor),
         centerTitle: true,

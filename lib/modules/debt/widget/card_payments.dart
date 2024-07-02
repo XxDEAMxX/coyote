@@ -30,172 +30,173 @@ class CardPayments extends StatelessWidget {
           );
         }
       },
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 8,
-                offset: Offset(0, 4),
-              ),
-            ],
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+          border: Border.all(
+            color: Colors.grey.withOpacity(0.5),
+            width: 0.5,
           ),
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  const Text(
-                    'Cuota #:',
-                    style: TextStyle(
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                const Text(
+                  'Cuota #:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Center(
+                  child: Text(
+                    '${payment.quotaNumber}',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12,
+                      fontSize: 30,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  Center(
-                    child: Text(
-                      '${payment.quotaNumber}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 30,
-                      ),
-                      textAlign: TextAlign.center,
+                ),
+                Text(
+                  '${payment.id}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Text(
+                  'Dias mora:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+                const Text(
+                  'valor:',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.white),
                     ),
                   ),
-                  Text(
-                    '${payment.id}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text(
-                    'Dias mora:',
+                  child: const Text(
+                    'Saldo:',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                     ),
                   ),
-                  const Text(
-                    'valor:',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
+                ),
+                const Text(
+                  'Fecha vence:',
+                  style: TextStyle(
+                    color: Colors.greenAccent,
+                    fontSize: 12,
+                  ),
+                ),
+                const Text(
+                  'fecha de pago:',
+                  style: TextStyle(
+                    color: Colors.greenAccent,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  balance <= 0
+                      ? '0'
+                      : mora < 0
+                          ? '0'
+                          : mora.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  DoubleExtension().toMoneySim(payment.amountToBePaid),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                  ),
+                ),
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.white),
                     ),
                   ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                    child: const Text(
-                      'Saldo:',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'Fecha vence:',
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const Text(
-                    'update:',
-                    style: TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    balance <= 0
-                        ? '0'
-                        : mora < 0
-                            ? '0'
-                            : mora.toString(),
+                  child: Text(
+                    DoubleExtension().toMoneySim(balance),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                     ),
                   ),
-                  Text(
-                    DoubleExtension().toMoneySim(payment.amountToBePaid),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
+                ),
+                Text(
+                  DateFormat('dd/MM/yyyy').format(payment.datePayment!),
+                  style: const TextStyle(
+                    color: Colors.greenAccent,
+                    fontSize: 12,
                   ),
-                  Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                    child: Text(
-                      DoubleExtension().toMoneySim(balance),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
+                ),
+                Text(
+                  DateTimeExtension().toHumanize(payment.updatedAt),
+                  style: const TextStyle(
+                    color: Colors.greenAccent,
+                    fontSize: 12,
                   ),
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(payment.datePayment!),
-                    style: const TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 12,
-                    ),
-                  ),
-                  Text(
-                    DateTimeExtension().toHumanize(payment.updatedAt),
-                    style: const TextStyle(
-                      color: Colors.greenAccent,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-              Icon(
-                balance <= 0
-                    ? Icons.file_download_done
-                    : toPay
-                        ? Icons.payments_outlined
-                        : Icons.lock,
-                color: balance <= 0
-                    ? Colors.greenAccent
-                    : toPay
-                        ? mora > 2
-                            ? Colors.red
-                            : Colors.blue
-                        : Colors.orange,
-                size: 60,
-              )
-            ],
-          ),
+                ),
+              ],
+            ),
+            Icon(
+              balance <= 0
+                  ? Icons.file_download_done
+                  : toPay
+                      ? Icons.payments_outlined
+                      : Icons.lock,
+              color: balance <= 0
+                  ? Colors.greenAccent
+                  : toPay
+                      ? mora > 2
+                          ? Colors.red
+                          : Colors.blue
+                      : Colors.orange,
+              size: 60,
+            )
+          ],
         ),
       ),
     );

@@ -40,6 +40,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final list = ref.watch(loanProvider.select((state) => state.loans));
     final loading = ref.watch(loanProvider.select((state) => state.loading));
     return SsScaffold(
+      backgroundColor: Colors.black,
       actions: [
         IconButton(
           icon: Icon(
@@ -105,22 +106,15 @@ class _HomePageState extends ConsumerState<HomePage> {
       ],
       title: 'Home',
       body: Container(
-          color: Colors.black,
-          child: loading
-              ? const Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Column(
-                    children: list.map((e) => CardDebt(loan: e)).toList(),
-                  ),
-                ) /*  ListView.builder(
-                itemBuilder: (context, index) {
-                  return CardDebt(
-                    loan: list[index],
-                  );
-                },
-                itemCount: list.length,
-              ), */
-          ),
+        color: Colors.black,
+        child: loading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(
+                  children: list.map((e) => CardDebt(loan: e)).toList(),
+                ),
+              ),
+      ),
     );
   }
 }
