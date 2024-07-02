@@ -61,31 +61,35 @@ class _CardDebtState extends ConsumerState<CardDebt> {
           loanId: widget.loan.id!,
         ));
       },
-      child: Padding(
-        padding: EdgeInsets.all(8.sp),
-        child: SsCard(
-          child: loading
-              ? const CircularProgressIndicator()
-              : Row(
-                  children: [
-                    Center(
-                      child: Text(
-                        '${widget.loan.position}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 30.sp,
-                        ),
-                        textAlign: TextAlign.center,
+      child: SsCard(
+        child: loading
+            ? const CircularProgressIndicator()
+            : Row(
+                children: [
+                  Center(
+                    child: Text(
+                      '${widget.loan.position}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 30.sp,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    SizedBox(width: 30.w),
-                    Column(
+                  ),
+                  SizedBox(width: 30.w),
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          '${client?.name}',
-                          style: TextStyle(
-                            fontSize: 24.sp,
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(
+                            '${client?.name}',
+                            style: TextStyle(
+                              fontSize: 24.sp,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                         Text(
@@ -117,27 +121,26 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    Column(
-                      children: [
-                        Icon(
-                          Icons.water_drop,
+                  ),
+                  Column(
+                    children: [
+                      Icon(
+                        Icons.water_drop,
+                        color: Colors.greenAccent,
+                        size: 60.sp,
+                      ),
+                      Text(
+                        'cod: ${widget.loan.id}',
+                        style: TextStyle(
+                          fontSize: 12.sp,
                           color: Colors.greenAccent,
-                          size: 60.sp,
+                          fontWeight: FontWeight.w600,
                         ),
-                        Text(
-                          'cod: ${widget.loan.id}',
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Colors.greenAccent,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
       ),
     );
   }

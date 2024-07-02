@@ -56,7 +56,7 @@ class PaymentsDatabase {
   Future<void> insertAll(
       PaymentModel client, int quotas, String workDays) async {
     final db = await instance.database;
-    DateTime date = DateTime.now();
+    DateTime date = DateTime.now().add(Duration(days: 1));
 
     for (int i = 0; i < quotas; i++) {
       if (workDays.contains('Lunes a Viernes')) {
@@ -71,7 +71,6 @@ class PaymentsDatabase {
         }
       }
       await db.insert(table, client.toMapAll(i + 1, date));
-      // Incrementar la fecha
       date = date.add(Duration(days: 1));
     }
   }
@@ -168,5 +167,23 @@ class PaymentsDatabase {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<void> updateDateFail() async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> payments = await db.query('payments');
+
+    for (var payment in payments) {
+      final updatedAt =
+          DateTime.fromMillisecondsSinceEpoch(payment['date_payment']);
+      final newDate = updatedAt.add(Duration(days: 1)).millisecondsSinceEpoch;
+
+      await db.update(
+        table,
+        {'date_payment': newDate},
+        where: 'id = ?',
+        whereArgs: [payment['id']],
+      );
+    }
   }
 }
