@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/payments_database.dart';
 import 'package:coyote/modules/home/widget/card_debt.dart';
@@ -8,6 +10,10 @@ import 'package:coyote/widgets/ss_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as path;
 
 @RoutePage()
 class HomePage extends ConsumerStatefulWidget {
@@ -72,7 +78,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                 appRouter.push(const RegisterExpensesRoute());
                 break;
               case '9':
-                await PaymentsDatabase.instance.updateDateFail();
+                // await PaymentsDatabase.instance.updateDateFail();
+                await exportDatabaseFolder();
+                break;
+              case '10':
+                // await PaymentsDatabase.instance.updateDateFail();
+                await replaceDatabaseFolder();
                 break;
             }
           },
@@ -99,7 +110,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             const PopupMenuItem<String>(
               value: '9',
-              child: Text('Registrar Retiro'),
+              child: Text('Exportar base de datos'),
+            ),
+            const PopupMenuItem<String>(
+              value: '10',
+              child: Text('Importar base de datos'),
             ),
           ],
         ),
@@ -111,10 +126,88 @@ class _HomePageState extends ConsumerState<HomePage> {
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 child: Column(
-                  children: list.map((e) => CardDebt(loan: e)).toList(),
+                  children: [
+                    SizedBox(height: 20.h),
+                    ...list.map((e) => CardDebt(loan: e)).toList(),
+                  ],
                 ),
               ),
       ),
     );
+  }
+
+  Future<void> exportDatabaseFolder() async {
+    try {
+      var databasesPath = await getDatabasesPath();
+
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String exportPath = path.join(documentsDirectory.path, 'database_backup');
+
+      Directory(exportPath).createSync(recursive: true);
+
+      Directory(databasesPath).listSync().forEach((file) {
+        if (file is File) {
+          String newPath = path.join(exportPath, path.basename(file.path));
+          file.copySync(newPath);
+        }
+      });
+
+      await Share.shareXFiles(
+        Directory(exportPath)
+            .listSync()
+            .whereType<File>()
+            .map((file) => XFile(file.path))
+            .toList(),
+        text: 'Aquí está la carpeta de bases de datos SQLite.',
+      );
+    } catch (e) {
+      print('Error al exportar la carpeta de bases de datos: $e');
+    }
+  }
+
+  Future<void> replaceDatabaseFolder() async {
+    try {
+      var databasesPath = await getDatabasesPath();
+
+      Directory documentsDirectory = await getApplicationDocumentsDirectory();
+      String backupPath = path.join(documentsDirectory.path, 'database_backup');
+
+      if (Directory(backupPath).existsSync()) {
+        await closeDatabases();
+
+        var backupFiles = Directory(backupPath).listSync().whereType<File>();
+
+        Directory(databasesPath).listSync().forEach((file) {
+          if (file is File) {
+            file.deleteSync();
+          }
+        });
+
+        backupFiles.forEach((file) {
+          String newPath = path.join(databasesPath, path.basename(file.path));
+          file.copySync(newPath);
+        });
+
+        await openDatabases();
+
+        print('Bases de datos reemplazadas exitosamente.');
+      } else {
+        print('La carpeta de respaldo no existe.');
+      }
+    } catch (e) {
+      print('Error al reemplazar las bases de datos: $e');
+    }
+  }
+
+  Future<void> closeDatabases() async {
+    // Cierra todas las conexiones de base de datos abiertas aquí
+    // Ejemplo:
+    // await database.close();
+  }
+
+  Future<void> openDatabases() async {
+    // Abre todas las conexiones de base de datos necesarias aquí
+    // Ejemplo:
+    // database = await openDatabase('path_to_database');
   }
 }

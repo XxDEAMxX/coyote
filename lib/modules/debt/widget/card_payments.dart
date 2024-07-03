@@ -34,13 +34,6 @@ class CardPayments extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black,
           borderRadius: BorderRadius.circular(8),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
           border: Border.all(
             color: Colors.grey.withOpacity(0.5),
             width: 0.5,
