@@ -3,7 +3,6 @@ import 'package:coyote/data/client_database.dart';
 import 'package:coyote/models/client_model.dart';
 import 'package:coyote/modules/clients/clients_provider.dart';
 import 'package:coyote/routes/app_router.dart';
-import 'package:coyote/routes/app_router.gr.dart';
 import 'package:coyote/widgets/ss_scaffold.dart';
 import 'package:coyote/widgets/ss_button.dart';
 import 'package:coyote/widgets/ss_notification.dart';

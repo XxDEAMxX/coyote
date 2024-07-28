@@ -54,6 +54,7 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
               .contains(nameController.text.toLowerCase());
     }).toList();
     return SsScaffold(
+      titleAppBar: 'CLIENTES',
       onBack: () {
         appRouter.popAndPush(HomeRoute());
       },

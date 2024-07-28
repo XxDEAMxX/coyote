@@ -7,7 +7,6 @@ import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/models/payment_model.dart';
 import 'package:coyote/modules/new_loan/loan_provider.dart';
 import 'package:coyote/routes/app_router.dart';
-import 'package:coyote/routes/app_router.gr.dart';
 import 'package:coyote/widgets/ss_scaffold.dart';
 import 'package:coyote/widgets/ss_button.dart';
 import 'package:coyote/widgets/ss_dropdown.dart';
