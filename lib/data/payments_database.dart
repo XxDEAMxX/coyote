@@ -19,8 +19,7 @@ class PaymentsDatabase {
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = '$dbPath/$filePath';
-    return await openDatabase(path,
-        version: 3, onCreate: _createDB, onUpgrade: _upgradeDB);
+    return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -32,15 +31,10 @@ class PaymentsDatabase {
       date_payment INTEGER NOT NULL,
       amount_paid REAL NOT NULL,
       amount_to_be_paid REAL NOT NULL,
-      updated_at INTEGER
+      updated_at INTEGER,
+      FOREIGN KEY (loan_id) REFERENCES loans (id)
     )
   ''');
-  }
-
-  Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      await db.execute('ALTER TABLE $table ADD COLUMN updated_at INTEGER');
-    }
   }
 
   Future close() async {
@@ -48,13 +42,13 @@ class PaymentsDatabase {
     db.close();
   }
 
-  Future<int> insert(PaymentModel client) async {
+  Future<int> insert(PaymentModel payment) async {
     final db = await instance.database;
-    return await db.insert(table, client.toMap());
+    return await db.insert(table, payment.toMap());
   }
 
   Future<void> insertAll(
-      PaymentModel client, int quotas, String workDays) async {
+      PaymentModel payment, int quotas, String workDays) async {
     final db = await instance.database;
     DateTime date = DateTime.now().add(Duration(days: 1));
 
@@ -70,7 +64,7 @@ class PaymentsDatabase {
           date = date.add(Duration(days: 1));
         }
       }
-      await db.insert(table, client.toMapAll(i + 1, date));
+      await db.insert(table, payment.toMapAll(i + 1, date));
       date = date.add(Duration(days: 1));
     }
   }
@@ -155,15 +149,15 @@ class PaymentsDatabase {
       );
     });
     return list.where((element) {
-      return DateTimeExtension().toHumanize(element.updatedAt).contains(date);
+      return DateTimeExtension().toHumanize(element.datePayment).contains(date);
     }).toList();
   }
 
-  Future<int> update(PaymentModel client, int id) async {
+  Future<int> update(PaymentModel payment, int id) async {
     final db = await instance.database;
     return await db.update(
       table,
-      client.toMapPaid(),
+      payment.toMapPaid(),
       where: 'id = ?',
       whereArgs: [id],
     );

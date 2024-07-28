@@ -42,7 +42,9 @@ class _CardDebtState extends ConsumerState<CardDebt> {
       print(e);
     } finally {
       loading = false;
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
@@ -62,6 +64,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
         ));
       },
       child: SsCard(
+        backgroundColor: Colors.black,
         child: loading
             ? const CircularProgressIndicator()
             : Row(
@@ -72,6 +75,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 30.sp,
+                        color: Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -87,6 +91,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                             '${client?.name}',
                             style: TextStyle(
                               fontSize: 24.sp,
+                              color: Colors.white,
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -97,6 +102,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
+                            color: Colors.white,
                           ),
                         ),
                         InkWell(
@@ -108,6 +114,7 @@ class _CardDebtState extends ConsumerState<CardDebt> {
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
+                              color: Colors.white,
                             ),
                           ),
                         ),

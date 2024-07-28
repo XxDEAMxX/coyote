@@ -24,36 +24,33 @@ class MyApp extends StatelessWidget {
         },
         minTextAdapt: true,
         builder: (BuildContext context, Widget? child) {
-          return Material(
-            child: MaterialApp.router(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData.light(),
-                title: 'Coyote',
-                routerConfig: appRouter.config(
-                  navigatorObservers: () => [
-                    FlutterSmartDialog.observer,
-                    AutoRouteObserver(),
-                  ],
-                ),
-                builder: FlutterSmartDialog.init(
-                  builder: FlutterSmartDialog.init(
-                    builder: (context, child) {
-                      child = MediaQuery(
-                        data: MediaQuery.of(context).copyWith(
-                          textScaler: const TextScaler.linear(1.0),
-                        ),
-                        child: child ?? const SizedBox(),
-                      );
-
-                      return Center(
-                        child: Container(
-                          constraints: BoxConstraints(maxWidth: width),
-                          child: child,
-                        ),
-                      );
-                    },
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData.light(),
+            title: 'Coyote',
+            routerConfig: appRouter.config(
+              navigatorObservers: () => [
+                FlutterSmartDialog.observer,
+                AutoRouteObserver(),
+              ],
+            ),
+            builder: FlutterSmartDialog.init(
+              builder: (context, child) {
+                child = MediaQuery(
+                  data: MediaQuery.of(context).copyWith(
+                    textScaler: const TextScaler.linear(1.0),
                   ),
-                )),
+                  child: child ?? const SizedBox(),
+                );
+
+                return Center(
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: width),
+                    child: child,
+                  ),
+                );
+              },
+            ),
           );
         },
       );

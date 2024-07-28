@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coyote/modules/clients/clients_provider.dart';
 import 'package:coyote/modules/clients/widgets/clients_card.dart';
+import 'package:coyote/routes/app_router.dart';
 import 'package:coyote/routes/app_router.gr.dart';
-import 'package:coyote/widgets/ss_app_bar.dart';
+import 'package:coyote/widgets/ss_scaffold.dart';
 import 'package:coyote/widgets/ss_text_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,7 +54,9 @@ class _ClientsPageState extends ConsumerState<ClientsPage> {
               .contains(nameController.text.toLowerCase());
     }).toList();
     return SsScaffold(
-      title: 'Clientes',
+      onBack: () {
+        appRouter.popAndPush(HomeRoute());
+      },
       actions: [
         IconButton(
           icon: Icon(

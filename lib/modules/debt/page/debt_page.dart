@@ -1,3 +1,4 @@
+import 'package:coyote/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +8,7 @@ import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/modules/debt/debt_provider.dart';
 import 'package:coyote/modules/debt/widget/card_payments.dart';
 import 'package:coyote/type/date_time_extension.dart';
-import 'package:coyote/widgets/ss_app_bar.dart';
+import 'package:coyote/widgets/ss_scaffold.dart';
 
 @RoutePage()
 class DebtPage extends ConsumerStatefulWidget {
@@ -22,13 +23,9 @@ class DebtPage extends ConsumerStatefulWidget {
   ConsumerState<DebtPage> createState() => _DebtPageState();
 }
 
-class _DebtPageState extends ConsumerState<DebtPage>
-    with AutomaticKeepAliveClientMixin {
+class _DebtPageState extends ConsumerState<DebtPage> {
   LoanModel? loan;
   bool loading = false;
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -54,7 +51,6 @@ class _DebtPageState extends ConsumerState<DebtPage>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final payments = ref.watch(debtProvider.select((value) => value.payments));
     final totalAmountPaid =
         payments.fold<double>(0, (sum, item) => sum + (item.amountPaid ?? 0));
@@ -66,49 +62,48 @@ class _DebtPageState extends ConsumerState<DebtPage>
         DateTimeExtension().toHumanize(element.updatedAt) ==
         DateTimeExtension().toHumanize(DateTime.now()));
     return SsScaffold(
-      title: 'Pagos',
-      body: loading
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  padding:
-                      EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 5.h),
-                  child: Column(
-                    children: [
-                      _buildRow(
-                          'Total Venta:', loan?.amount.toString() ?? 'N/A'),
-                      _buildRow('Saldo Venta:', balance.toString()),
-                      _buildRow('Codigo:', loan?.id.toString() ?? 'N/A'),
-                      _buildRow('Fecha Venta:',
-                          DateTimeExtension().toHumanize(loan?.createAt)),
-                    ],
+      onBack: () {
+        appRouter.back();
+      },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (loading)
+            Center(child: CircularProgressIndicator())
+          else ...[
+            Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.black,
                   ),
                 ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: payments.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final e = entry.value;
-
-                        return CardPayments(
-                          payment: e,
-                          toPay: toPay == index && !paid,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
+              ),
+              padding: EdgeInsets.only(left: 20.sp, right: 20.sp, bottom: 5.h),
+              child: Column(
+                children: [
+                  _buildRow('Total Venta:', loan?.amount.toString() ?? 'N/A'),
+                  _buildRow('Saldo Venta:', balance.toString()),
+                  _buildRow('Codigo:', loan?.id.toString() ?? 'N/A'),
+                  _buildRow('Fecha Venta:',
+                      DateTimeExtension().toHumanize(loan?.createAt)),
+                ],
+              ),
             ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  return CardPayments(
+                    payment: payments[index],
+                    toPay: toPay == index && !paid,
+                  );
+                },
+                itemCount: payments.length,
+              ),
+            ),
+          ]
+        ],
+      ),
     );
   }
 

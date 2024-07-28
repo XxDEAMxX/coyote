@@ -2,8 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/expenses_database.dart';
 import 'package:coyote/models/expense_model.dart';
 import 'package:coyote/routes/app_router.dart';
+import 'package:coyote/routes/app_router.gr.dart';
 import 'package:coyote/type/text_input_format_extension.dart';
-import 'package:coyote/widgets/ss_app_bar.dart';
+import 'package:coyote/widgets/ss_scaffold.dart';
 import 'package:coyote/widgets/ss_button.dart';
 import 'package:coyote/widgets/ss_notification.dart';
 import 'package:coyote/widgets/ss_text_input.dart';
@@ -26,7 +27,9 @@ class _RegisterExpensesPageState extends State<RegisterExpensesPage> {
   @override
   Widget build(BuildContext context) {
     return SsScaffold(
-        title: 'Registrar Gasto',
+        onBack: () {
+          appRouter.popAndPush(HomeRoute());
+        },
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           child: Column(

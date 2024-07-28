@@ -31,7 +31,8 @@ class LoanDatabase {
       amount REAL NOT NULL,
       quotas INTEGER NOT NULL,
       work_days TEXT NOT NULL,
-      create_at INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP
+      create_at INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (client_id) REFERENCES clients (id)
     )
   ''');
   }

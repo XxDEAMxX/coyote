@@ -7,7 +7,8 @@ import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/models/payment_model.dart';
 import 'package:coyote/modules/new_loan/loan_provider.dart';
 import 'package:coyote/routes/app_router.dart';
-import 'package:coyote/widgets/ss_app_bar.dart';
+import 'package:coyote/routes/app_router.gr.dart';
+import 'package:coyote/widgets/ss_scaffold.dart';
 import 'package:coyote/widgets/ss_button.dart';
 import 'package:coyote/widgets/ss_dropdown.dart';
 import 'package:coyote/widgets/ss_notification.dart';
@@ -51,6 +52,10 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
   Widget build(BuildContext context) {
     const color = Colors.black;
     return SsScaffold(
+      onBack: () {
+        appRouter.back();
+      },
+      titleAppBar: 'NUEVO PRESTAMO',
       body: Container(
         color: Colors.white,
         child: Padding(
@@ -220,7 +225,6 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
           ),
         ),
       ),
-      title: 'Nuevo Prestamo',
     );
   }
 
@@ -299,8 +303,8 @@ class _NewLoanPageState extends ConsumerState<NewLoanPage> {
       );
       await PaymentsDatabase.instance
           .insertAll(paymentModel, quotas, workDays!);
+      appRouter.back();
       await ref.read(loanProvider.notifier).getAllLoans();
-      appRouter.maybePop();
     } catch (e) {
       print(e);
       SsNotification.error('Error al crear el prestamo');

@@ -5,15 +5,17 @@ class SsCard extends StatelessWidget {
   const SsCard({
     super.key,
     required this.child,
+    this.backgroundColor = Colors.white,
   });
 
   final Widget child;
+  final Color backgroundColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
           color: Colors.grey.withOpacity(0.5),

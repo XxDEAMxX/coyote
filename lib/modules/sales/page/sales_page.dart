@@ -2,9 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:coyote/data/loan_database.dart';
 import 'package:coyote/models/loan_model.dart';
 import 'package:coyote/modules/sales/widget/sales_data_dialog.dart';
+import 'package:coyote/routes/app_router.dart';
+import 'package:coyote/routes/app_router.gr.dart';
 import 'package:coyote/type/date_time_extension.dart';
 import 'package:coyote/type/double_extension.dart';
-import 'package:coyote/widgets/ss_app_bar.dart';
+import 'package:coyote/widgets/ss_scaffold.dart';
 import 'package:coyote/widgets/ss_card.dart';
 import 'package:coyote/widgets/ss_dialog.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +44,9 @@ class _SalesPageState extends State<SalesPage> {
   @override
   Widget build(BuildContext context) {
     return SsScaffold(
-      title: 'Ventas',
+      onBack: () {
+        appRouter.popAndPush(HomeRoute());
+      },
       body: FutureBuilder<Map<String, double>>(
         future: _getPaymentSumsByDate(),
         builder: (context, snapshot) {

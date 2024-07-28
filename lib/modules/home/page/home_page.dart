@@ -1,12 +1,11 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:coyote/data/payments_database.dart';
 import 'package:coyote/modules/home/widget/card_debt.dart';
 import 'package:coyote/modules/new_loan/loan_provider.dart';
 import 'package:coyote/routes/app_router.dart';
 import 'package:coyote/routes/app_router.gr.dart';
-import 'package:coyote/widgets/ss_app_bar.dart';
+import 'package:coyote/widgets/ss_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,7 +45,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final list = ref.watch(loanProvider.select((state) => state.loans));
     final loading = ref.watch(loanProvider.select((state) => state.loading));
     return SsScaffold(
-      backgroundColor: Colors.black,
+      titleAppBar: 'HOME PAGE',
       actions: [
         IconButton(
           icon: Icon(
@@ -119,20 +118,14 @@ class _HomePageState extends ConsumerState<HomePage> {
           ],
         ),
       ],
-      title: 'Home',
-      body: Container(
-        color: Colors.black,
-        child: loading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.h),
-                    ...list.map((e) => CardDebt(loan: e)).toList(),
-                  ],
-                ),
-              ),
-      ),
+      body: loading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                return CardDebt(loan: list[index]);
+              },
+              itemCount: list.length,
+            ),
     );
   }
 
@@ -200,14 +193,10 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Future<void> closeDatabases() async {
-    // Cierra todas las conexiones de base de datos abiertas aquí
-    // Ejemplo:
     // await database.close();
   }
 
   Future<void> openDatabases() async {
-    // Abre todas las conexiones de base de datos necesarias aquí
-    // Ejemplo:
     // database = await openDatabase('path_to_database');
   }
 }

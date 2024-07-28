@@ -8,7 +8,6 @@ class LoanProvider extends StateNotifier<LoanState> {
   Future<void> getAllLoans() async {
     state = state.copyWith(loading: true);
     final list = await LoanDatabase.instance.getAllLoans();
-    await Future.delayed(const Duration(seconds: 1));
     state = state.copyWith(loans: list);
     state = state.copyWith(loading: false);
   }
